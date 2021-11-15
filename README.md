@@ -2,7 +2,7 @@
 
 Fork: https://github.com/Ticomware/AstoriaUWP
 
-## Absract
+## Abstract
 "Project Astoria" remake (UWP)
 
 Original status: Archived (Public archive)
