@@ -10,6 +10,8 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using DalvikUWPCSharp.Applet;
 using Windows.UI.Popups;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
 //using DalvikUWPCSharp.Disassembly.APKParser;
 //using DalvikUWPCSharp.Disassembly.APKParser.bean;
 
@@ -102,14 +104,22 @@ namespace DalvikUWPCSharp.Disassembly
         public static async Task<byte[]> ReadFile(StorageFile sf)
         {
             byte[] fileBytes = null;
-            using (IRandomAccessStreamWithContentType stream = await sf.OpenReadAsync())
+
+            try
             {
-                fileBytes = new byte[stream.Size];
-                using (DataReader reader = new DataReader(stream))
+                using (IRandomAccessStreamWithContentType stream = await sf.OpenReadAsync())
                 {
-                    await reader.LoadAsync((uint)stream.Size);
-                    reader.ReadBytes(fileBytes);
+                    fileBytes = new byte[stream.Size];
+                    using (DataReader reader = new DataReader(stream))
+                    {
+                        await reader.LoadAsync((uint)stream.Size);
+                        reader.ReadBytes(fileBytes);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Util - ReadFile - OpenReadAsync Exception: " + ex.Message);
             }
 
             return fileBytes;
@@ -133,7 +143,9 @@ namespace DalvikUWPCSharp.Disassembly
             var dialog = new MessageDialog("Apps folder " + appsRoot  +  " purged.");
 
             await dialog.ShowAsync();
-        }
+                        
+
+        }//PurgeAppsFolder end
 
         public static string ConvertPath(string path)
         {

@@ -1,6 +1,6 @@
-# AstoriaUWP 0.0.0.2
+# AstoriaUWP 0.0.0.3
 
-Fork: https://github.com/Ticomware/AstoriaUWP
+Forked from: https://github.com/Ticomware/AstoriaUWP
 
 ## Abstract
 "Project Astoria" remake (UWP)
@@ -8,8 +8,20 @@ Fork: https://github.com/Ticomware/AstoriaUWP
 Original status: Archived (Public archive)
 
 ## My actions (my 2 cents) 
-1. Renamed DalvikUWPCSharp.sln onto AstoriaUWP.sln :)
-2. Lite bugfix (some try...catch added to avoid accident app halts...)
+1. Min. OS build req. upgraded to 15063
+2. Fast RnD + lite "bugfixing" (some try...catch added to avoid accident app halts...)
+
+## Screenshots
+![Shot 1](Images/shot1.png)
+![Shot 2](Images/shot2.png)
+![Shot 3](Images/shot3.png)
+![Shot 4](Images/shot4.png)
+![Shot 5](Images/shot5.png)
+![Shot 6](Images/shot6.png)
+![Shot 7](Images/shot7.png)
+![Shot 8](Images/shot8.png)
+![Shot 9](Images/shot9.png)
+![Shot 10](Images/shot10.png)
 
 ## Description
 
@@ -37,5 +49,5 @@ With best wishes,
 
   [m][e] 2021
 
-NFC is RnD project only. AS-IS. No support. Distributed under the MIT License.
+AstoriaUWP is RnD project only. AS-IS. No support. Distributed under the MIT License.
 

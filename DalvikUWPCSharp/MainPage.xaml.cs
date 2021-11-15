@@ -11,6 +11,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -98,12 +99,7 @@ namespace DalvikUWPCSharp
 
         }
 
-        // Purge App folder
-        private async void button_Click(object sender, RoutedEventArgs e)
-        {
-            await Disassembly.Util.PurgeAppsFolder();
-        }
-
+        
         // AppListBox_SelectionChanged
         private async void AppListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -118,7 +114,30 @@ namespace DalvikUWPCSharp
 
                 string lbi = (string)e.AddedItems[0];
 
-                DroidApp da = await DroidApp.CreateAsync(await appsRoot.GetFolderAsync(lbi));
+                DroidApp da = null;
+
+                try
+                {
+                    da = await DroidApp.CreateAsync(await appsRoot.GetFolderAsync(lbi));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("DroidApp.CreateAsync - Exception: " + ex.Message);
+
+                    ContentDialog msgDialog = new ContentDialog()
+                    {
+                        Title = "DroidApp.CreateAsync - Exception",
+                        Content = ex.Message,
+                        PrimaryButtonText = "OK"
+                    };
+
+                    ContentDialogResult result = await msgDialog.ShowAsync();
+
+                    // Go to Setting Page
+                    Frame.Navigate(typeof(MainPage));
+
+                    return;
+                }
 
                 da.Run(Frame);
             }
@@ -145,18 +164,18 @@ namespace DalvikUWPCSharp
                     // Ensure the current window is active
                     Window.Current.Activate();
 
-                    bool Result = await Disassembly.Util.LoadAPK2("testdpc7.apk");
+                    bool Result = await Disassembly.Util.LoadAPK2("helloworld.apk");
                     
 
                     if (Result == false)
                     {
-                        Debug.WriteLine("Some problems: testdpc7.apk test file not found at Pictures folder");
+                        Debug.WriteLine("Some problems: helloworld.apk test file not found at Pictures folder");
 
                         ContentDialog msgDialog = new ContentDialog()
                         {
-                            Title = "Caution",
-                            Content = "Install button is for test purposes only (it's works only for testdpc7.apk in Pictures folder). To install your own apk file, run(click) it via Explorer.",
-
+                            Title = "Caution: helloworld.apk test file not found at Pictures folder",
+                            Content = "Install button is for test purposes only. " +
+                            "To install your own apk file, run(click) it via Explorer.",
                             PrimaryButtonText = "OK"
                         };
 
@@ -167,7 +186,70 @@ namespace DalvikUWPCSharp
                     }
                 }
 
+            }//else
+
+        }//AppListBox_SelectionChanged end
+
+        // chooseFileButton Click handler
+        private async void chooseFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            FileOpenPicker openPicker = new FileOpenPicker();
+            openPicker.ViewMode = PickerViewMode.Thumbnail;
+            openPicker.SuggestedStartLocation = PickerLocationId.Desktop;
+            openPicker.CommitButtonText = "Choose APK file";
+            openPicker.FileTypeFilter.Add(".apk");
+            var file = await openPicker.PickSingleFileAsync();
+
+            // check the file choosed or not
+            if (file != null)
+            {
+                string filePath = file.Name;//.Path;
+                Debug.WriteLine("Choosed apk file: " + filePath);
+
+                // ----------------------------------------------------------------
+
+                // Go to Setting Page
+                Frame.Navigate(typeof(InstallApkPage));
+
+                // Ensure the current window is active
+                Window.Current.Activate();
+
+                bool Result = await Disassembly.Util.LoadAPK2(filePath);
+
+
+                if (Result == false)
+                {
+                    Debug.WriteLine("Some problems: "+ filePath +" file not found at Pictures folder!");
+
+                    ContentDialog msgDialog = new ContentDialog()
+                    {
+                        Title = "Caution: " + filePath + " file not found at Pictures folder.",
+                        Content = 
+                        "Please place apk file on special location (Picture folder) before choosing it.",
+                        PrimaryButtonText = "OK"
+                    };
+
+                    ContentDialogResult result = await msgDialog.ShowAsync();
+
+                    // Go to Setting Page
+                    Frame.Navigate(typeof(MainPage));
+                }
+
+                // ----------------------------------------------------------------
             }
-        }
+
+        }//openButton_Click end
+
+        // Purge Button handler: Purge App folder operation
+        private async void purgeButton_Click(object sender, RoutedEventArgs e)
+        {
+            await Disassembly.Util.PurgeAppsFolder();
+
+            // Go to Main Page
+            Frame.Navigate(typeof(MainPage));
+
+        }//purgeButton_Click end
+
+        
     }
 }

@@ -91,6 +91,8 @@ namespace DalvikUWPCSharp.Disassembly.APKReader
             if (info.supportSmallScreens || info.supportNormalScreens || info.supportLargeScreens)
                 info.supportAnyDensity = false;
         }
+
+        // extractInfo
         public ApkInfo extractInfo(byte[] manifest_xml, byte[] resources_arsx)
         {
             string manifestXml = string.Empty;
@@ -106,39 +108,86 @@ namespace DalvikUWPCSharp.Disassembly.APKReader
             }
 
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(manifestXml);
-            return extractInfo(doc, resources_arsx);
 
-        }
+            try
+            {
+                doc.LoadXml(manifestXml);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("APK Reader - LoadXml(manifestXml) - Exception: " + ex.Message);
+            }
+
+            ApkInfo Res = null;
+
+            try
+            {
+                Res = extractInfo(doc, resources_arsx);
+            }
+            catch (Exception ex2)
+            {
+                Debug.WriteLine("APK Reader - extractInfo - Exception: " + ex2.Message);
+            }
+            return Res;
+
+        }//extractInfo end
+
+
+        // extractInfo
         public ApkInfo extractInfo(XmlDocument manifestXml, byte[] resources_arsx)
         {
             ApkInfo info = new ApkInfo();
+
             VER_ICN[VER_ID] = "";
             VER_ICN[ICN_ID] = "";
             VER_ICN[LABEL_ID] = "";
             try
             {
                 XmlDocument doc = manifestXml;
+
                 if (doc == null)
+                {
                     throw new Exception("Document initialize failed");
+                }
+
                 info.resourcesFileName = "resources.arsx";
+
                 info.resourcesFileBytes = resources_arsx;
+                
                 // Fill up the permission field
                 extractPermissions(info, doc);
 
                 // Fill up some basic fields
                 info.minSdkVersion = FindInDocument(doc, "uses-sdk", "minSdkVersion");
+                
                 info.targetSdkVersion = FindInDocument(doc, "uses-sdk", "targetSdkVersion");
+                
                 info.versionCode = FindInDocument(doc, "manifest", "versionCode");
+                
                 info.versionName = FindInDocument(doc, "manifest", "versionName");
+                
                 info.packageName = FindInDocument(doc, "manifest", "package");
 
                 int labelID;
                 info.label = FindInDocument(doc, "application", "label");
-                if (info.label.StartsWith("@"))
-                    VER_ICN[LABEL_ID] = info.label;
-                else if (int.TryParse(info.label, out labelID))
-                    VER_ICN[LABEL_ID] = String.Format("@{0}", labelID.ToString("X4"));
+
+                try
+                {
+                    if (info.label.StartsWith("@"))
+                    {
+                        VER_ICN[LABEL_ID] = info.label;
+                    }
+                    else if (int.TryParse(info.label, out labelID))
+                    {
+                        VER_ICN[LABEL_ID] = String.Format("@{0}", labelID.ToString("X4"));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("VER_ICN[LABEL_ID] error: " + ex.Message);
+
+                    VER_ICN[LABEL_ID] = "VER_ICN[LABEL_ID] error"; // TEMP
+                }
 
                 // Fill up the support screen field
                 extractSupportScreens(info, doc);
@@ -247,8 +296,10 @@ namespace DalvikUWPCSharp.Disassembly.APKReader
                 throw e;
             }
             return info;
-        }
+        }//extractInfo end
 
+
+        // ExtractPermission 
         private void ExtractPermission(ApkInfo info, XmlDocument doc, String keyName, String attribName)
         {
             XmlNodeList usesPermissions = doc.GetElementsByTagName(keyName);
@@ -265,7 +316,11 @@ namespace DalvikUWPCSharp.Disassembly.APKReader
                     }
                 }
             }
-        }
+
+        }//ExtractPermission end
+
+
+        // FindInDocument
         private String FindInDocument(XmlDocument doc, String keyName,
                 String attribName)
         {
@@ -284,8 +339,12 @@ namespace DalvikUWPCSharp.Disassembly.APKReader
                     }
                 }
             }
+            
             return null;
-        }
+
+        }//FindInDocument end
+
+
 
         //  private String normalizeXml(String rawXMl) {
         //        String xml = "";

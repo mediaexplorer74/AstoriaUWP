@@ -12,6 +12,7 @@ using DalvikUWPCSharp.Reassembly;
 using DalvikUWPCSharp.Reassembly.UI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -71,30 +72,39 @@ namespace DalvikUWPCSharp
         }
         // RnD end
 
+        // 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
-            //base.OnNavigatedTo(e);
-            if (e.Parameter.GetType().Equals(typeof(DroidApp)))
+            try
             {
-                RunningApp = (DroidApp)e.Parameter;
-                appImage.Source = RunningApp.appIcon;
+                //base.OnNavigatedTo(e);
+                if (e.Parameter.GetType().Equals(typeof(DroidApp)))
+                {
+                    RunningApp = (DroidApp)e.Parameter;
+                    appImage.Source = RunningApp.appIcon;
 
-                // RnD start
-                UIRenderer = new Renderer((DroidApp)e.Parameter);
-                cpu = new DalvikCPU(((DroidApp)e.Parameter).dex, ((DroidApp)e.Parameter).metadata.packageName, this);
-                cpu.Start();
-                //await 
-                Render();
-                // RnD end
+                    // RnD start
+                    UIRenderer = new Renderer((DroidApp)e.Parameter);
+                    cpu = new DalvikCPU(((DroidApp)e.Parameter).dex, ((DroidApp)e.Parameter).metadata.packageName, this);
+                    cpu.Start();
+                    //await 
+                    Render();
+                    // RnD end
+                }
+                else if (e.Parameter.GetType().Equals(typeof(StorageFolder)))
+                {
+                    setPreloadStatusText("Setting up app environment");
+                    RunningApp = await DroidApp.CreateAsync((StorageFolder)e.Parameter);
+                }
             }
-            else if (e.Parameter.GetType().Equals(typeof(StorageFolder)))
+            catch
             {
-                setPreloadStatusText("Setting up app environment");
-                RunningApp = await DroidApp.CreateAsync((StorageFolder)e.Parameter);
+                // Plan B - go home 
+                Frame.Navigate(typeof(MainPage));
             }
-           
-        }
-            
+
+        }//OnNavigatedTo end
+
 
 
 
@@ -111,12 +121,30 @@ namespace DalvikUWPCSharp
         private async void Render()
         {
             var layout = await UIRenderer.CurrentApp.resFolder.GetFolderAsync("layout");
-            StorageFile sf = await layout.GetFileAsync("activity_main.xml");
+            
+            StorageFile sf = null;
+            try
+            {
+                sf = await layout.GetFileAsync("activity_main.xml");
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine("EmuPage - Render - layout.GetFileAsync - Exception: " + ex.Message);
+            }
 
-            UIElement child = await UIRenderer.RenderXmlFile(sf);
+            UIElement child = null;
+
+            try
+            {
+                child = await UIRenderer.RenderXmlFile(sf);
+            }
+            catch (Exception ex2)
+            {
+                Debug.WriteLine("EmuPage - Render - UIRenderer.RenderXmlFile Exception: " + ex2.Message);
+            }
 
             //UserControl uc = (UserControl)child;
-            var uc = child;
+            UIElement uc = child;
 
 
             var widthBinding = new Binding();
@@ -132,11 +160,29 @@ namespace DalvikUWPCSharp
             //uc.SetBinding(FrameworkElement.WidthProperty, widthBinding);
             //uc.SetBinding(FrameworkElement.HeightProperty, hBinding);
 
-            RenderTargetBox.Child = (await UIRenderer.RenderXmlFile(sf));
-            RenderTargetGrid.Children.Add(await UIRenderer.RenderXmlFile(sf));
+            try
+            {
+                RenderTargetBox.Child = (await UIRenderer.RenderXmlFile(sf));
+            }
+            catch (Exception ex3)
+            {
+                Debug.WriteLine("EmuPage - Render - RenderTargetBox.Child Exception: " + ex3.Message);
+            }
+
+            try
+            {
+                RenderTargetGrid.Children.Add(await UIRenderer.RenderXmlFile(sf));
+            }
+            catch (Exception ex4)
+            {
+                Debug.WriteLine("EmuPage - Render - RenderTargetGrid.Children.Add Exception: " + ex4.Message);
+            }
+
 
             SetTitleBarColor(attr.colorPrimaryDark);
+
             cpu.Start();
+            
             Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();//.
 
             //RnD
@@ -302,7 +348,15 @@ namespace DalvikUWPCSharp
 
         private void GoBack(object sender, RoutedEventArgs e)
         {
-            cpu.GoBack();
+            try
+            {
+                cpu.GoBack();
+            }
+            catch
+            {
+                // Plan B - go home
+                Frame.Navigate(typeof(MainPage));
+            }
         }
     }
 }

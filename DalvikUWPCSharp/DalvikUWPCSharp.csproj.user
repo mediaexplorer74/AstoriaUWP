@@ -19,5 +19,13 @@
     <AppxPackageIsForStore>False</AppxPackageIsForStore>
     <AppxShowAllApps>False</AppxShowAllApps>
     <AppxBuildConfigurationSelection>x86|x64|arm</AppxBuildConfigurationSelection>
+    <Source>C:\Users\media\source\repos\AstoriaUWP\Design\ProjectAstoria.png</Source>
+    <SmallTileSource>C:\Users\media\source\repos\AstoriaUWP\Design\ProjectAstoria.png</SmallTileSource>
+    <MediumTileSource>C:\Users\media\source\repos\AstoriaUWP\Design\ProjectAstoria.png</MediumTileSource>
+    <WideTileSource>C:\Users\media\source\repos\AstoriaUWP\Design\ProjectAstoria.png</WideTileSource>
+    <LargeTileSource>C:\Users\media\source\repos\AstoriaUWP\Design\ProjectAstoria.png</LargeTileSource>
+    <AppIconSource>C:\Users\media\source\repos\AstoriaUWP\Design\ProjectAstoria.png</AppIconSource>
+    <SplashScreenSource>C:\Users\media\source\repos\AstoriaUWP\Design\ProjectAstoria.png</SplashScreenSource>
+    <PackageLogoSource>C:\Users\media\source\repos\AstoriaUWP\Design\ProjectAstoria.png</PackageLogoSource>
   </PropertyGroup>
 </Project>

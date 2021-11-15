@@ -57,12 +57,17 @@ namespace DalvikUWPCSharp.Applet
             return result;
         }
 
+
         // CreateAsync(StorageFolder sf)
         public static async Task<DroidApp> CreateAsync(StorageFolder sf)
         {
             DroidApp result = new DroidApp();
+            
             result.localAppRoot = sf;
+
+            // Get APK Info from Local App Folder ...
             await result.GetAPKInfoFromLocalAppFolder();
+            
             return result;
         }
 
@@ -220,6 +225,7 @@ namespace DalvikUWPCSharp.Applet
 
             //dexNet
             dexWriter = new EnhancedDexWriter();
+
             //dexWriter = new PlainDexWriter();
             StorageFile dexFile = await localAppRoot.GetFileAsync("classes.dex");
             byte[] dexBytes = await Disassembly.Util.ReadFile(dexFile);
@@ -307,8 +313,16 @@ namespace DalvikUWPCSharp.Applet
         {
             //TODO: change picked icon based on device DPI
 
-            return new BitmapImage(new Uri(localAppRoot.Path + Disassembly.Util.ConvertPath(metadata.iconFileName[metadata.iconFileName.Count - 1])));
-
+            BitmapImage BI = null;
+            try
+            {
+                BI = new BitmapImage(new Uri(localAppRoot.Path + Disassembly.Util.ConvertPath(metadata.iconFileName[metadata.iconFileName.Count - 1])));
+            }
+            catch
+            {
+                BI = null;
+            }
+            return BI;
         }
 
         public async Task LoadAsync()
@@ -384,12 +398,15 @@ namespace DalvikUWPCSharp.Applet
                             await sf.CopyAsync(localAppRoot, "AndroidManifest.old", NameCollisionOption.ReplaceExisting);
                             //Continue decoding it.
                         }
+                        
                         //AXMLPrinter printer = new AXMLPrinter();
                         //printer.main(sf);
                         //APKManifest man = new APKManifest();
                         //string decoded = man.ReadManifestFileIntoXml(sfBytes);
                         //string decoded = await parser.transBinaryXml(sf);
+                        
                         string decoded;
+
                         //using (Stream stream = File.OpenRead(sf.Path))
                         using (MemoryStream stream = new MemoryStream(await Disassembly.Util.ReadFile(sf)))
                         {
