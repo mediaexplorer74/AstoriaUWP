@@ -8,7 +8,7 @@ Fork: https://github.com/Ticomware/AstoriaUWP
 Original status: Archived (Public archive)
 
 ## My actions 
-1. Renamed DalvikUWPCSharp.sln onto Astoria.sln
+1. Renamed DalvikUWPCSharp.sln onto AstoriaUWP.sln :)
 
 ## Description
 
