@@ -1,2 +1,0 @@
-obj\x64\Debug\split.pri
-obj\x64\Debug\split.map.txt

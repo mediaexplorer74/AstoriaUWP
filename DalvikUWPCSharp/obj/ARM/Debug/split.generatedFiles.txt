@@ -1,2 +1,0 @@
-obj\ARM\Debug\split.pri
-obj\ARM\Debug\split.map.txt
