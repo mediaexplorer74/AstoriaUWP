@@ -41,12 +41,13 @@ This project uses code from the following projects:
 
 <a href="https://github.com/mariokmk/dex.net">dex.net</a>
 
-# Contribute!
+## Contribute!
 There's still a TON of things missing from this proof-of-concept (MVP) and areas of improvement 
 
 With best wishes,
 
   [m][e] 2021
+
 
 AstoriaUWP is RnD project only. AS-IS. No support. Distributed under the MIT License.
 
