@@ -21,7 +21,6 @@ Original status: Archived (Public archive)
 ![Shot 7](Images/shot7.png)
 ![Shot 8](Images/shot8.png)
 ![Shot 9](Images/shot9.png)
-![Shot 10](Images/shot10.png)
 
 ## Description
 
