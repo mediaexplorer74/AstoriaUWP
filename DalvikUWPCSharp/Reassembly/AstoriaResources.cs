@@ -11,6 +11,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Storage;
+using Windows.UI.Popups;
 
 namespace DalvikUWPCSharp.Reassembly
 {
@@ -19,47 +20,73 @@ namespace DalvikUWPCSharp.Reassembly
         DroidApp currentApp;
         Dictionary<string, byte[]> files = new Dictionary<string, byte[]>();
 
+        // Task<AstoriaResources> CreateAsync(DroidApp da)
         public static async Task<AstoriaResources> CreateAsync(DroidApp da)
         {
             AstoriaResources temp = new AstoriaResources(da);
             await temp.EnumFiles();
             return temp;
-        }
+        }//CreateAsync
 
-        private AstoriaResources(DroidApp infoWars) : base()
+
+
+        //AstoriaResources
+        public AstoriaResources(DroidApp infoWars) : base()
         {
             currentApp = infoWars;
         }
 
+        // EnumFiles()
         public async Task EnumFiles()
         {
             currentApp.cpu.hostPage.setPreloadStatusText("Enumerating layout files...");
 
-            StorageFolder layoutFolder = await StorageFolder.GetFolderFromPathAsync(currentApp.resFolder.Path + @"\layout");
+            // old scheme
+            //StorageFolder layoutFolder = await StorageFolder.GetFolderFromPathAsync(currentApp.resFolder.Path + @"\layout");
+
+            // new 
+            StorageFolder layoutFolder = null;
+            try
+            {
+                layoutFolder = await StorageFolder.GetFolderFromPathAsync(currentApp.resFolder.Path + @"\layout");
+            }
+            catch (Exception ex1)
+            {
+                var dialog = new MessageDialog($"Exception : res layout folder not found =( \n\n{ex1.Message}");
+                await dialog.ShowAsync();
+                return;
+            }
+
+
             foreach(StorageFile sf in await layoutFolder.GetFilesAsync())
             {
                 int rootPathLength = currentApp.localAppRoot.Path.Length;
+
                 string relPathKey = sf.Path.Remove(0, rootPathLength + 1).Replace('\\', '/');
 
                 byte[] file = await Disassembly.Util.ReadFile(sf);
 
                 files[relPathKey] = file;
+
                 currentApp.cpu.hostPage.setPreloadStatusText($"Enumerated {sf.Name}");
             }
 
-        }
+        }//EnumFiles
 
+
+        // getColor(int id)
         public override int getColor(int id)
         {
             List<string> res = currentApp.metadata.resStrings["@" + id.ToString("X")];
             return int.Parse(res[0]);
         }
 
+        // getString(int id)
         public override string getString(int id)
         {
             List<string> res = currentApp.metadata.resStrings["@" + id.ToString("X")];
             return res[0];
-        }
+        }//getString
 
         public override string[] getStringArray(int id)
         {
@@ -84,8 +111,10 @@ namespace DalvikUWPCSharp.Reassembly
                 XmlReader axr = XmlReader.Create(ms);
                 return new AstoriaXmlParser(axr);
             }
-        }
+        }//getLayout
 
+
+        // task1Loaded
         /*private void task1Loaded(IAsyncOperation<StorageFile> sender, AsyncStatus e)
         {
             //StorageFile sf = sender.GetResults();

@@ -92,7 +92,8 @@
                                     </VisualState>
                                 </VisualStateGroup>
                             </VisualStateManager.VisualStateGroups>
-                            <Rectangle x:Name="background" StrokeThickness="0" RadiusX="24" RadiusY="24" Fill="#3FFFFFFF" RenderTransformOrigin="0.5,0.5" Opacity="0">
+                            <Rectangle x:Name="background" StrokeThickness="0" RadiusX="24" RadiusY="24" Fill="#3FFFFFFF" 
+                                        Opacity="0">
                                 <Rectangle.RenderTransform>
                                     <CompositeTransform/>
                                 </Rectangle.RenderTransform>
@@ -112,7 +113,9 @@
         </Grid.RowDefinitions>
 
         <!--<Viewbox x:Name="RenderTargetBox" Stretch="Uniform"/>-->
-        <Grid x:Name="RenderTargetGrid" Background="White"/>
+        <Viewbox x:Name="RenderTargetBox" Stretch="Uniform"/>
+
+        <Grid x:Name="RenderTargetGrid" Background="Blue"/>
         <Grid x:Name="PreSplashGrid" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
             <Grid Height="400">
                 <Image x:Name="appImage" HorizontalAlignment="Center" Height="100" VerticalAlignment="Top" Width="100" Margin="0" Source="Assets/Square150x150Logo.png"/>

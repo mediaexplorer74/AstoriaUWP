@@ -28,7 +28,8 @@ namespace DalvikUWPCSharp
         /// </summary>
         public App()
         {
-            Microsoft.ApplicationInsights.WindowsAppInitializer.InitializeAsync(
+            Microsoft.ApplicationInsights.WindowsAppInitializer.InitializeAsync
+            (
                 Microsoft.ApplicationInsights.WindowsCollectors.Metadata |
                 Microsoft.ApplicationInsights.WindowsCollectors.Session);
             this.InitializeComponent();
@@ -40,13 +41,13 @@ namespace DalvikUWPCSharp
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
 
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;
+               // this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
 
@@ -75,10 +76,28 @@ namespace DalvikUWPCSharp
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                rootFrame.Navigate(typeof(MainPage), e.Arguments);
+
+                if (e.Arguments != "")
+                {
+                    rootFrame.Navigate(typeof(InstallApkPage), e.Arguments);
+                }
+                else
+                {
+                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                }
             }
+
             // Ensure the current window is active
             Window.Current.Activate();
+
+            if (e.Arguments != "")
+            {
+                //Load APK into dissasembler
+                await Disassembly.Util.LoadAPK2(e.Arguments);
+            }
+
+            // Ensure the current window is active
+            //Window.Current.Activate();
         }
 
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
@@ -86,6 +105,8 @@ namespace DalvikUWPCSharp
             throw new NotImplementedException();
         }
 
+        // OnFileActivated
+        // Invoked when the application is activated through file-open...
         protected override async void OnFileActivated(FileActivatedEventArgs args)
         {
             base.OnFileActivated(args);
@@ -93,7 +114,7 @@ namespace DalvikUWPCSharp
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                this.DebugSettings.EnableFrameRateCounter = true;
+                //this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
 
@@ -130,7 +151,7 @@ namespace DalvikUWPCSharp
 
             //Load APK into dissasembler
             await Disassembly.Util.LoadAPK(args);
-        }
+        }//onFileActivated
 
         /// <summary>
         /// Invoked when Navigation to a certain page fails

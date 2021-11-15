@@ -105,7 +105,7 @@
         </Style>
     </Page.Resources>
 
-    <Grid>
+    <Grid Background="#FF283238">
         <Grid.RowDefinitions>
             <RowDefinition Height="56"/>
             <RowDefinition Height="*"/>
@@ -119,10 +119,10 @@
         <Grid x:Name="ContentGrid" Background="#FFE1E1E1" Grid.Row="1">
 
             <ListView x:Name="listView" Margin="0">
-                <ListViewItem Content="About" Foreground="#FF737373" Background="White" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
-                <ListViewItem Content="Developer: Carl J. Bialorucki" Foreground="#FF737373" Background="White" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
-                <ListViewItem Content="Publisher: Ticomware" Foreground="#FF737373" Background="White" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
-                <ListViewItem Content="Version 0.0.0.1" Foreground="#FF737373" Background="White" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
+                <ListViewItem Content="About" Background="#FF283238" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
+                <ListViewItem Content="Developer: Carl J. Bialorucki" Background="#FF283238" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
+                <ListViewItem Content="Publisher: Ticomware" Background="#FF283238" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
+                <ListViewItem Content="Version 0.0.0.2" Background="#FF283238" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
             </ListView>
 
         </Grid>

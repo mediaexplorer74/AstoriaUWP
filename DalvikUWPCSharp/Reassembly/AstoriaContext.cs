@@ -35,14 +35,22 @@ namespace DalvikUWPCSharp.Reassembly
             da.context = this;
         }
 
+
+        public AstoriaContext()
+        {
+            //TODO
+        }
+
         public AstoriaContext(DroidApp da)
         {
             runningApp = da;
             RClass = new AstoriaR(runningApp);
-            //resObj = new AstoriaResources(runningApp);
+
+            resObj = new AstoriaResources(runningApp);
 
             //Inflate manifest, inflate RClass using dex.net
-            /*string layoutAbsoluteUri = runningApp.localAppRoot.Path + "\\AndroidManifest.xml";
+            // RnD start
+            string layoutAbsoluteUri = runningApp.localAppRoot.Path + "\\AndroidManifest.xml";
 
             IAsyncOperation<StorageFile> task1 = StorageFile.GetFileFromPathAsync(layoutAbsoluteUri);
             StorageFile sf = task1.GetResults();
@@ -87,9 +95,11 @@ namespace DalvikUWPCSharp.Reassembly
 
                     Activities.Add(a);
                 }
-            }*/
+            }
+            //RnD end
 
         }
+
 
         public DalvikCPU getCPU()
         {

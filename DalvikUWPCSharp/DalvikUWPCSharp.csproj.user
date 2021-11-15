@@ -2,15 +2,17 @@
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <AuthenticationMode>Windows</AuthenticationMode>
-    <DoNotLaunchApp>true</DoNotLaunchApp>
+    <DoNotLaunchApp>false</DoNotLaunchApp>
     <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
     <UseEmulator>false</UseEmulator>
+    <CommandLineArguments>
+    </CommandLineArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
     <UseEmulator>true</UseEmulator>
     <AuthenticationMode>Windows</AuthenticationMode>
-    <DoNotLaunchApp>true</DoNotLaunchApp>
+    <DoNotLaunchApp>false</DoNotLaunchApp>
   </PropertyGroup>
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>

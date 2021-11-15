@@ -8,5 +8,6 @@ namespace DalvikUWPCSharp.Reassembly
 {
     class AstoriaTypedArray
     {
+        // TODO
     }
 }

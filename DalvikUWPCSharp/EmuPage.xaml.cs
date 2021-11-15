@@ -1,4 +1,9 @@
-﻿using AndroidInteropLib;
+﻿// EmuPage
+//
+//
+//
+
+using AndroidInteropLib;
 using AndroidInteropLib.android.view;
 using AndroidXml;
 using DalvikUWPCSharp.Applet;
@@ -19,6 +24,7 @@ using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -38,7 +44,10 @@ namespace DalvikUWPCSharp
     public sealed partial class EmuPage : Page
     {
         public DroidApp RunningApp;
-        //private Renderer UIRenderer;
+
+        // !
+        private Renderer UIRenderer;
+
         private DalvikCPU cpu;
 
 
@@ -47,16 +56,20 @@ namespace DalvikUWPCSharp
         {
             this.InitializeComponent();
             this.Loaded += EmuPage_Loaded;
-            //Window.Current.SizeChanged += Current_SizeChanged;
+
+            //RnD
+            Windows.UI.Xaml.Window.Current.SizeChanged += Current_SizeChanged;
             
         }
 
-        /*private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        // RnD start
+        private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
-            UserControl appView = (UserControl)RenderTargetBox.Child;
-            appView.Width = (this.ActualWidth) * (40/37);
-            appView.Height = (this.ActualHeight - 48) * (40 / 37);
-        }*/
+            //UserControl appView = (UserControl)RenderTargetBox.Child;
+            //appView.Width = (this.ActualWidth) * (40/37);
+            //appView.Height = (this.ActualHeight - 48) * (40 / 37);
+        }
+        // RnD end
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -65,18 +78,23 @@ namespace DalvikUWPCSharp
             {
                 RunningApp = (DroidApp)e.Parameter;
                 appImage.Source = RunningApp.appIcon;
-                //UIRenderer = new Renderer((DroidApp)e.Parameter);
-                //cpu = new DalvikCPU(((DroidApp)e.Parameter).dex, ((DroidApp)e.Parameter).metadata.packageName, this);
-                //cpu.Start();
-                //await Render();
-            }
 
+                // RnD start
+                UIRenderer = new Renderer((DroidApp)e.Parameter);
+                cpu = new DalvikCPU(((DroidApp)e.Parameter).dex, ((DroidApp)e.Parameter).metadata.packageName, this);
+                cpu.Start();
+                //await 
+                Render();
+                // RnD end
+            }
             else if (e.Parameter.GetType().Equals(typeof(StorageFolder)))
             {
                 setPreloadStatusText("Setting up app environment");
                 RunningApp = await DroidApp.CreateAsync((StorageFolder)e.Parameter);
             }
+           
         }
+            
 
 
 
@@ -90,13 +108,16 @@ namespace DalvikUWPCSharp
             PreSplashGrid.Visibility = Visibility.Collapsed;
         }
 
-        private void Render()
+        private async void Render()
         {
-            //var layout = await UIRenderer.CurrentApp.resFolder.GetFolderAsync("layout");
-            //StorageFile sf = await layout.GetFileAsync("activity_main.xml");
+            var layout = await UIRenderer.CurrentApp.resFolder.GetFolderAsync("layout");
+            StorageFile sf = await layout.GetFileAsync("activity_main.xml");
 
-            /*UIElement child = await UIRenderer.RenderXmlFile(sf);
-            UserControl uc = (UserControl)child;
+            UIElement child = await UIRenderer.RenderXmlFile(sf);
+
+            //UserControl uc = (UserControl)child;
+            var uc = child;
+
 
             var widthBinding = new Binding();
             widthBinding.Converter = new EPDPConverter();
@@ -108,19 +129,24 @@ namespace DalvikUWPCSharp
             hBinding.ElementName = "RenderTargetBox";
             hBinding.ConverterParameter = RenderTargetBox.Height;
 
-            uc.SetBinding(FrameworkElement.WidthProperty, widthBinding);
-            uc.SetBinding(FrameworkElement.HeightProperty, hBinding);*/
+            //uc.SetBinding(FrameworkElement.WidthProperty, widthBinding);
+            //uc.SetBinding(FrameworkElement.HeightProperty, hBinding);
 
-            //RenderTargetBox.Child = (await UIRenderer.RenderXmlFile(sf));
-            //RenderTargetGrid.Children.Add(await UIRenderer.RenderXmlFile(sf));
+            RenderTargetBox.Child = (await UIRenderer.RenderXmlFile(sf));
+            RenderTargetGrid.Children.Add(await UIRenderer.RenderXmlFile(sf));
 
-            //SetTitleBarColor(attr.colorPrimaryDark);
-            //cpu.Start();
-            //Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().
-        }
+            SetTitleBarColor(attr.colorPrimaryDark);
+            cpu.Start();
+            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();//.
+
+            //RnD
+            //await RenderPage();
+
+        }//
 
         public void SetContentView(View v)
         {
+            //TEST
             RenderTargetGrid.Children.Clear();
             RenderTargetGrid.Children.Add(v);
         }
@@ -158,43 +184,61 @@ namespace DalvikUWPCSharp
 
         public void SetWinBackColor(Color color)
         {
-
+            //TEST
             RenderTargetGrid.Background = new SolidColorBrush(color);
         }
 
         private async Task RenderPage()
         {
+            
+
             //Take content_main.xml and render it (for now)
             //var resFolder doc = RunningApp.localAppRoot.GetFolderAsync()
-            /*var layout = await UIRenderer.CurrentApp.resFolder.GetFolderAsync("layout");
+
+            // RnD start
+            var layout = await UIRenderer.CurrentApp.resFolder.GetFolderAsync("layout");
+
             StorageFile sf = await layout.GetFileAsync("content_main.xml");
+
             using (MemoryStream stream = new MemoryStream(await Disassembly.Util.ReadFile(sf)))
             {
                 AndroidXmlReader reader = new AndroidXmlReader(stream);
+
                 reader.MoveToContent();
                 XDocument document = XDocument.Load(reader);
+
                 string p1nspace = "{http://schemas.android.com/apk/res/android}";
+
                 foreach (XElement xe in document.Element("RelativeLayout").Elements())
                 {
                     if(xe.Name.ToString().Equals("TextView"))
                     {
                         TextBlock tv = new TextBlock();
+
                         //default position for android app
+
                         tv.HorizontalAlignment = HorizontalAlignment.Center;
                         tv.VerticalAlignment = VerticalAlignment.Center;
-                        //string content = "";
+                        
+                        string content = "";
                         foreach(XAttribute xa in xe.Attributes())
                         {
                             content += $"Attribute: {xa.Name}\nValue: {xa.Value}\nIsNamespaceDeclaration: {xa.IsNamespaceDeclaration}\n\n";
-                        }*/
-                        /*foreach(XAttribute attr in xe.Attributes())
+                        } // * /
+                        
+                        //
+                        foreach(XAttribute attr in xe.Attributes())
                         {
-                            attr.
-                        }*/
+                            //attr.
+                        }
+                        //
                         //var ns = document.Root.Name.Namespace;
+                        
                         //This is a hack
-                        //string[] content = xe.ToString().Split('"');
-                        /*foreach(string s in content)
+                        string[] content1 = xe.ToString().Split('"');
+                        
+                        // *
+                        foreach(string s in content1)
                         {
                             if(!s.Contains("p1") && !s.Contains("-2"))
                             {
@@ -202,32 +246,49 @@ namespace DalvikUWPCSharp
                                 break;
                             }
                         }
-                        string content = xe.Attribute(p1nspace+"text").Value;
+                        string content2 = xe.Attribute(p1nspace+"text").Value;
                         //-2 represents "wrap_content", essentially "autosize"
                         int width = int.Parse(xe.Attribute(p1nspace + "layout_width").Value);
                         int height = int.Parse(xe.Attribute(p1nspace + "layout_height").Value);
-                        //string content = "null";
-                        tv.Text = content;
-                        //RenderTargetGrid.Children.Add(tv);
+                        //string content2 = "null";
+                        tv.Text = content2;
+
+                        //RnD
+                        RenderTargetGrid.Children.Add(tv);
                     }
                 }
                 
                 //decoded = document.ToString();
-            }*/
-        }
+            }
+            // RnD end
+        }//RenderPage
 
         //Currently only support content_main.xml since the dissassembler cant yet parse activity_main.xml
         private void EmuPage_Loaded(object sender, RoutedEventArgs e)
         {
             var appView = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
-            appView.Title = RunningApp.metadata.label;
+
+            try
+            {
+                appView.Title = RunningApp.metadata.label;
+            }
+            catch (Exception ex1)
+            {
+                var dialog = new MessageDialog($"RunningApp.metadata is null (broken object)  \n\n{ex1.Message}");
+                dialog.ShowAsync();
+
+                return;
+            }
+
             cpu = new DalvikCPU(RunningApp.dex, RunningApp.metadata.packageName, this);
+
             cpu.Start();
 
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
 
             SystemNavigationManager.GetForCurrentView().BackRequested += EmuPage_BackRequested;
-        }
+
+        }// EmuPage_Loaded
 
         private void EmuPage_BackRequested(object sender, BackRequestedEventArgs e)
         {

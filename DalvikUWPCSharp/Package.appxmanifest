@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="ac6319f9-004f-4ef0-8c76-cd14b9dfecec" Publisher="CN=cbial" Version="0.1.0.0" />
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"  xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10"  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" IgnorableNamespaces="uap mp iot uap3">
+  <Identity Name="DalvikUWPCSharp-cd14b9dfecec" Publisher="CN=media" Version="0.1.0.0" />
   <mp:PhoneIdentity PhoneProductId="ac6319f9-004f-4ef0-8c76-cd14b9dfecec" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>DalvikUWPCSharp</DisplayName>
@@ -19,6 +19,11 @@
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:InitialRotationPreference>
+          <uap:Rotation Preference="portrait" />
+          <uap:Rotation Preference="landscape" />
+          <uap:Rotation Preference="landscapeFlipped" />
+        </uap:InitialRotationPreference>
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.fileTypeAssociation">
@@ -34,6 +39,18 @@
     </Application>
   </Applications>
   <Capabilities>
-    <Capability Name="internetClient" />
+    <Capability Name="internetClientServer"/>
+    <iot:Capability Name="lowLevelDevices"/>
+    <uap:Capability Name="removableStorage"/>
+    <uap3:Capability Name="remoteSystem"/>
+    <iot:Capability Name="systemManagement"/>
+    <uap:Capability Name="userAccountInformation"/>
+    <Capability Name="privateNetworkClientServer"/>
+    <uap3:Capability Name="backgroundMediaPlayback"/>
+    <uap:Capability Name="musicLibrary"/>
+    <uap:Capability Name="picturesLibrary"/>
+    <uap:Capability Name="videosLibrary"/>
+    <Capability Name="allJoyn"/>
+    <DeviceCapability Name="lowLevel"/>
   </Capabilities>
 </Package>

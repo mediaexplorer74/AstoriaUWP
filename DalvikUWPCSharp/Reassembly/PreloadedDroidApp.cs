@@ -13,12 +13,14 @@ namespace DalvikUWPCSharp.Reassembly
         AstoriaContext currentContext;
         AstoriaR currentRes;
 
+
+        // PreloadedDroidApp
         public PreloadedDroidApp(DroidApp da)
         {
             runningApp = da;
             currentContext = new AstoriaContext(runningApp);
             currentRes = new AstoriaR(da);
-        }
+        }//PreloadedDroidApp
 
 
 

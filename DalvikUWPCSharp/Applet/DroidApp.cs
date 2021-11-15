@@ -41,17 +41,23 @@ namespace DalvikUWPCSharp.Applet
 
         private static StorageFolder localFolder = ApplicationData.Current.LocalFolder;
         private StorageFolder appsRoot { get; set; }
+
         private EmuPage emPage;
+        
         public StorageFolder localAppRoot { get; private set; }
         public StorageFolder resFolder { get; private set; }
 
+        // CreateAsync(StorageFile sf)
         public static async Task<DroidApp> CreateAsync(StorageFile sf)
         {
             DroidApp result = new DroidApp();
+
             await result.CopyAPKToLocalStorage(sf);
+            
             return result;
         }
 
+        // CreateAsync(StorageFolder sf)
         public static async Task<DroidApp> CreateAsync(StorageFolder sf)
         {
             DroidApp result = new DroidApp();
@@ -60,11 +66,13 @@ namespace DalvikUWPCSharp.Applet
             return result;
         }
 
+        // CreateAsync(StorageFolder sf, EmuPage ep)
         public static async Task<DroidApp> CreateAsync(StorageFolder sf, EmuPage ep)
         {
             DroidApp result = new DroidApp();
             result.localAppRoot = sf;
             await result.GetAPKInfoFromLocalAppFolder();
+
             result.emPage = ep;
 
             return result;
@@ -77,10 +85,13 @@ namespace DalvikUWPCSharp.Applet
             apkName = sf.Name.Replace(".apk", "");
 
             appsRoot = await localFolder.CreateFolderAsync("Apps", CreationCollisionOption.OpenIfExists);
+
             localAppRoot = await appsRoot.CreateFolderAsync(apkName, CreationCollisionOption.GenerateUniqueName);
 
             apkName = localAppRoot.Name;
+
             StorageFile copiedFile = await sf.CopyAsync(appsRoot, apkName + ".apk");
+
             apkFile = copiedFile;
 
             try
@@ -153,11 +164,52 @@ namespace DalvikUWPCSharp.Applet
 
         public async Task GetAPKInfoFromLocalAppFolder()
         {
-            StorageFile manifestFile = await localAppRoot.GetFileAsync("AndroidManifest.old");
-            StorageFile resFile = await localAppRoot.GetFileAsync("resources.arsc");
-            resFolder = await localAppRoot.GetFolderAsync("res");
+            // StorageFile manifestFile = await localAppRoot.GetFileAsync("AndroidManifest.old");
+            StorageFile manifestFile;
+            try
+            {
+                //manifestFile = await localAppRoot.GetFileAsync("AndroidManifest.old");
+                manifestFile = await localAppRoot.GetFileAsync("AndroidManifest.xml");
+            }
+            catch (Exception ex1)
+            {
+                //var dialog = new MessageDialog($"AndroidManifest.old manifest file error \n\n{ex1.Message}");
+                var dialog = new MessageDialog($"AndroidManifest.xml manifest file error \n\n{ex1.Message}");
+                await dialog.ShowAsync();
+
+                return;
+            }
+
+            // StorageFile resFile = await localAppRoot.GetFileAsync("resources.arsc");
+            StorageFile resFile;
+            try
+            {
+                resFile = await localAppRoot.GetFileAsync("resources.arsc");
+            }
+            catch (Exception ex2)
+            {
+                var dialog = new MessageDialog($"resources.arsc resource file error  \n\n{ex2.Message}");
+                await dialog.ShowAsync();
+
+                return;
+            }
+
+
+            // 
+            try
+            {
+                resFolder = await localAppRoot.GetFolderAsync("res");
+            }
+            catch (Exception ex3)
+            {
+                var dialog = new MessageDialog($"GetFolderAsync(res) res folder error \n\n{ex3.Message}");
+                await dialog.ShowAsync();
+
+                return;
+            }
 
             byte[] manifestBytes = await Disassembly.Util.ReadFile(manifestFile);
+
             byte[] resBytes = await Disassembly.Util.ReadFile(resFile);
 
             ApkReader apkReader = new ApkReader();
@@ -178,10 +230,12 @@ namespace DalvikUWPCSharp.Applet
             //dexWriter.dex.GetMethod().
             var methods = dexWriter.dex.GetClasses();
 
-            foreach(Class m in methods)
+            // foreach(Class m in methods)
+            foreach (Class m in methods)
             {
                 Debug.WriteLine(m.ToString());
-                if(m.Name.Equals("com.example.ticom.myapp.MainActivity") || m.Name.Equals("com.example.ticom.myapp.MainActivity$1") || m.Name.StartsWith("com.example.ticom.myapp.R"))
+
+                if (m.Name.Equals("com.example.ticom.myapp.MainActivity") || m.Name.Equals("com.example.ticom.myapp.MainActivity$1") || m.Name.StartsWith("com.example.ticom.myapp.R"))
                 {
                     TextWriter tw = new StringWriter();
                     dexWriter.WriteOutClass(m, ClassDisplayOptions.Fields, tw);
@@ -193,11 +247,13 @@ namespace DalvikUWPCSharp.Applet
                     }
 
                     var meths = m.GetMethods();
-                    foreach(Method x in meths)
+
+                    foreach (Method x in meths)
                     {
                         //Debug.WriteLine(x.ToString());
                         Debug.WriteLine(dexWriter.WriteOutMethod(m, x, new Indentation()));
-                        if(x.Name.Equals("onCreate") || x.Name.Equals("<init>"))
+
+                        if (x.Name.Equals("onCreate") || x.Name.Equals("<init>"))
                         {
                             var opcodes = x.GetInstructions();
                             foreach(OpCode o in opcodes)
@@ -229,14 +285,23 @@ namespace DalvikUWPCSharp.Applet
                                     Debug.WriteLine("field info: " + mx.ToString() + "\n");
                                 }
                                 //Debug.WriteLine("instruction: " + o.ToString() + "\n");
+
                             }
+
                         }
-                    }
-                }
-            }
+
+                    }//foreach(Method x...
+
+                }//if...
+
+            }//foreach(Class m...
 
             //context = new AstoriaContext();
-        }
+
+        }// GetAPKInfoFromLocalFolder
+
+
+
 
         public BitmapImage GetAppIcon()
         {
@@ -266,6 +331,7 @@ namespace DalvikUWPCSharp.Applet
             //manifest = new Manifest(manifestFile);
         }
 
+        // Erase apps Root + apkFile data
         public async void Purge()
         {
             await appsRoot.DeleteAsync();
@@ -358,10 +424,10 @@ namespace DalvikUWPCSharp.Applet
 
             //Remove copied APK to save on disk space
             await apkFile.DeleteAsync();
-
             
-        }
+        }//Install
 
+        // Run
         public void Run(Frame frame)
         {
             frame.Navigate(typeof(EmuPage), this);

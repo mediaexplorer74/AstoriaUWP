@@ -1,4 +1,4 @@
-# Astoria UWP
+# AstoriaUWP 0.0.0.2
 
 Fork: https://github.com/Ticomware/AstoriaUWP
 
@@ -7,8 +7,9 @@ Fork: https://github.com/Ticomware/AstoriaUWP
 
 Original status: Archived (Public archive)
 
-## My actions 
+## My actions (my 2 cents) 
 1. Renamed DalvikUWPCSharp.sln onto AstoriaUWP.sln :)
+2. Lite bugfix (some try...catch added to avoid accident app halts...)
 
 ## Description
 
@@ -28,3 +29,13 @@ This project uses code from the following projects:
 <a href="https://github.com/tbaron/androidxmldotnet">androidxmldotnet</a>
 
 <a href="https://github.com/mariokmk/dex.net">dex.net</a>
+
+# Contribute!
+There's still a TON of things missing from this proof-of-concept (MVP) and areas of improvement 
+
+With best wishes,
+
+  [m][e] 2021
+
+NFC is RnD project only. AS-IS. No support. Distributed under the MIT License.
+

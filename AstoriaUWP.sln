@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1585
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DalvikUWPCSharp", "DalvikUWPCSharp\DalvikUWPCSharp.csproj", "{7F0EC421-87E3-4F1F-9485-B6936475A71B}"
 EndProject
@@ -31,6 +31,8 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7F0EC421-87E3-4F1F-9485-B6936475A71B}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{7F0EC421-87E3-4F1F-9485-B6936475A71B}.Debug|Any CPU.Build.0 = Debug|x86
+		{7F0EC421-87E3-4F1F-9485-B6936475A71B}.Debug|Any CPU.Deploy.0 = Debug|x86
 		{7F0EC421-87E3-4F1F-9485-B6936475A71B}.Debug|ARM.ActiveCfg = Debug|ARM
 		{7F0EC421-87E3-4F1F-9485-B6936475A71B}.Debug|ARM.Build.0 = Debug|ARM
 		{7F0EC421-87E3-4F1F-9485-B6936475A71B}.Debug|ARM.Deploy.0 = Debug|ARM
@@ -101,5 +103,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {489A687E-30EA-438F-AC0E-222D9E423D1E}
 	EndGlobalSection
 EndGlobal

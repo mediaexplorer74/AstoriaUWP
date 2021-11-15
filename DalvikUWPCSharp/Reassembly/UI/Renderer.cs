@@ -1,9 +1,11 @@
-﻿using AndroidInteropLib.android.support.design.widget;
+﻿using AndroidInteropLib.android.content;
+using AndroidInteropLib.android.support.design.widget;
 using AndroidXml;
 using DalvikUWPCSharp.Applet;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+
 
 namespace DalvikUWPCSharp.Reassembly.UI
 {
@@ -30,14 +33,38 @@ namespace DalvikUWPCSharp.Reassembly.UI
 
         public async Task<UIElement> RenderXmlFile(StorageFile sf)
         {
+            //string decoded;
+
+            //using (MemoryStream stream = new MemoryStream(await Disassembly.Util.ReadFile(sf)))
+
+            //byte[] byteArray = await DalvikUWPCSharp.Disassembly.Util.ReadFile(sf);
+            //Stream stream = new MemoryStream(byteArray);
+            //this.zf = new ZipArchive(stream);
+
+            //(stream)
             using (MemoryStream stream = new MemoryStream(await Disassembly.Util.ReadFile(sf)))
             {
                 AndroidXmlReader reader = new AndroidXmlReader(stream);
+
+                //RnD
                 reader.MoveToContent();
+
                 XDocument document = XDocument.Load(reader);
+
+                /*
+                string outerXml = reader.ReadOuterXml();
+
+                XDocument document = XDocument.Parse
+                (outerXml, 
+                    (LoadOptions.PreserveWhitespace |
+                    LoadOptions.SetBaseUri |
+                    LoadOptions.SetLineInfo)
+                );
+                */
+
                 //string p1nspace = "{http://schemas.android.com/apk/res/android}";
 
-                foreach(XElement xe in document.Elements())
+                foreach (XElement xe in document.Elements())
                 {
                     //Should only be 1 element
                     return await RenderObject(xe);
@@ -45,22 +72,35 @@ namespace DalvikUWPCSharp.Reassembly.UI
 
                 throw new Exception("Invalid XML File");
                 //decoded = document.ToString();
-            }
-        }
 
+            }//using (MemoryStream...
+
+            //RnD (TODO)
+            //return decoded as UIElement;
+
+        }//RenderXMLFile
+
+        // RenderObject
         public async Task<UIElement> RenderObject(XElement xe)
         {
             string xeName = xe.Name.ToString();
+            
             bool nestedObjs = xe.HasElements;
+
+            //RnD
             //AstoriaContext context = new AstoriaContext();
+            //AstoriaContext context = new AstoriaContext(da, res);
 
             if (xeName.Equals("android.support.design.widget.AppBarLayout"))
             {
                 //This manipulates the appbar. For now, let's just make it a grid. Usually contains toolbar.
+                
                 //double height = DPtoEP(56);
+                
                 Grid container = new Grid();
                 container.VerticalAlignment = VerticalAlignment.Top;
                 container.HorizontalAlignment = HorizontalAlignment.Stretch;
+
                 container.Height = attr.actionBarSize; //DPtoEP(56);
 
                 if(nestedObjs)
@@ -112,6 +152,7 @@ namespace DalvikUWPCSharp.Reassembly.UI
                 AndroidToolbar at = new AndroidToolbar();
                 at.SetTitle(CurrentApp.metadata.label);
                 //at.Height = DPtoEP(56);
+
                 return at;
             }
 
@@ -123,6 +164,7 @@ namespace DalvikUWPCSharp.Reassembly.UI
                 //Take current app path, pass 
                 string path = CurrentApp.resFolder.Path + relUri.Replace('@', '\\').Replace('/', '\\') + ".xml";
                 StorageFile sf = await StorageFile.GetFileFromPathAsync(path);
+
                 return await RenderXmlFile(sf);
             }
 
@@ -167,7 +209,43 @@ namespace DalvikUWPCSharp.Reassembly.UI
                 tv.Foreground = new SolidColorBrush(Color.FromArgb(255, 115, 115, 115));
                 return tv;
             }
+            // *** experimental - begin ***
+            else if (xeName.Equals("FrameLayout"))
+            {
+                /*
+                //Return Grid with objects inside
+                Grid container = new Grid();
+                if (nestedObjs)
+                {
+                    foreach (XElement xe1 in xe.Elements())
+                    {
+                        container.Children.Add(await RenderObject(xe1));
+                    }
+                }
 
+                return container;
+                */
+
+                //Ignore gravity for now, is typically bottom right
+                Button FAB = new Button();
+                
+                //Context context = new Context();
+
+                //FloatingActionButton FAB = new FloatingActionButton(context, new AstoriaAttrSet(xe));
+                FAB.HorizontalAlignment = HorizontalAlignment.Right;
+                FAB.VerticalAlignment = VerticalAlignment.Bottom;
+                FAB.Width = 52;
+                FAB.Height = 52;
+                
+                //xe.Attribute(XName.Get())
+                //FAB.Content = "src: " + xe.Attribute(XName.Get(p1nspace + "src")).Value;
+                //FAB.Content = "src: " + CurrentApp.metadata.resStrings[xe.Attribute(XName.Get(p1nspace + "src")).Value][0];
+                
+                FAB.Margin = new Thickness(10);
+                //return null;
+                return FAB;
+            }
+            // *** experimental - end ***
             else
             {
                 throw new NotImplementedException($"UIElement {xe.Name.ToString()} is not currently implemented on this renderer.");
@@ -175,6 +253,7 @@ namespace DalvikUWPCSharp.Reassembly.UI
             }
         }
 
+        // DPtoEP(int i)
         public static double DPtoEP(int i)
         {
             //TODO: scale android dp sizes to windows dp sizes
