@@ -156,7 +156,7 @@ namespace DalvikUWPCSharp
                     Frame.Navigate(typeof(SettingsPage));
                 }
 
-                if (str_idx == "Install Apk")
+                if (str_idx == "Load and install testdpc7.apk")
                 {
                     // Go to Setting Page
                     Frame.Navigate(typeof(InstallApkPage));
@@ -169,13 +169,12 @@ namespace DalvikUWPCSharp
 
                     if (Result == false)
                     {
-                        Debug.WriteLine("Some problems: helloworld.apk test file not found at Pictures folder");
+                        Debug.WriteLine("Some problems: testdpc7.apk test file not found at Pictures folder");
 
                         ContentDialog msgDialog = new ContentDialog()
                         {
-                            Title = "Caution: helloworld.apk test file not found at Pictures folder",
-                            Content = "Install button is for test purposes only. " +
-                            "To install your own apk file, run(click) it via Explorer.",
+                            Title = "Caution: testdpc7.apk test file not found at Pictures folder",
+                            Content = "Install button is for test purposes only.",
                             PrimaryButtonText = "OK"
                         };
 

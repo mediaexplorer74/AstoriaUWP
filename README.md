@@ -1,4 +1,4 @@
-# AstoriaUWP 0.0.0.6
+# AstoriaUWP 0.0.0.7
 
 Forked from: https://github.com/Ticomware/AstoriaUWP
 
@@ -8,7 +8,9 @@ Forked from: https://github.com/Ticomware/AstoriaUWP
 Original status: Archived (Public archive)
 
 ## My actions (my 2 cents) 
+
 1. Renamed DalvikUWPCSharp.sln onto AstoriaUWP.sln :)
+
 2. Lite bugfix (some try...catch added to avoid accident app halts...)
 
 ## Description
@@ -24,24 +26,27 @@ Note: This project was created as a proof-of-concept over a short amount of time
 ![Shot 1](Images/shot1.png)
 
 ## Coding "workbench"
-Visual Studio 2022 (But VS 2017 compatibility remained, for Live WinPhone debugging, heh!)
-Windows SDK 16053
+
+1. Visual Studio 2022 (But VS 2017 compatibility remained, for Live WinPhone debugging, heh!)
+
+2. Windows SDK 16053
+
 
 ## Test scenario
 
 Place _ASTORIA_/5 Test/testdpc7.apk at Pictures folder
 
-Run AstoriaUWP, and click Install Apk Button.
+Run AstoriaUWP, and click "Load and install testdpc7.apk" button.
 
-After loading phase, click Install app button.
+After loading phase, click "Install app" button.
 
-After installing phase, click App list.
+After installing phase, click "Apps list" button.
 
 Go to App Storage, find Layout folder.
 
 Place _ASTORIA_/5 Test/activity_main.xml at Layout folder.
 
-Try to run Emulator by tapping on TestDpc7 item.
+Try to run Emulator by tapping on "TestDpc7" item at apps list
 
 In result, the button 1 must be generated on Emu screen...
 

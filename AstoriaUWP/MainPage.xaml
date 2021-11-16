@@ -14,7 +14,7 @@
         
         <ListBox x:Name="AppListBox" Margin="0,43,0,65" SelectionChanged="AppListBox_SelectionChanged">
             <ListBoxItem Content="Settings"/>
-            <ListBoxItem Content="Install Apk"/>
+            <ListBoxItem Content="Load and install testdpc7.apk"/>
         </ListBox>
         <!--<ScrollViewer FontFamily="Segoe UI Symbol"/>-->
     </Grid>

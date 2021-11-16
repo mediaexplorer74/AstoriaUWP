@@ -126,8 +126,8 @@ namespace DalvikUWPCSharp
 
                 ContentDialog msgDialog = new ContentDialog()
                 {
-                    Title = "Activity_main.xml not found :( " +
-                      "It must be created manually. Use target x86 and your desktop pc to fix this xml problems.)",
+                    Title = "Activity_main.xml not found! " +
+                      "It must be created manually (in App Storage).",
                     Content = "Activity_main.xml critical problems: " + ex.Message,
                     PrimaryButtonText = "OK"
                 };
