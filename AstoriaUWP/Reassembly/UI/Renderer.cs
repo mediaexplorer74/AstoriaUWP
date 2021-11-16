@@ -1,9 +1,12 @@
-﻿using AndroidInteropLib.android.content;
+﻿// Reassembly - UI - Renderer
+
+using AndroidInteropLib.android.content;
 using AndroidInteropLib.android.support.design.widget;
 using AndroidXml;
 using DalvikUWPCSharp.Applet;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -33,52 +36,114 @@ namespace DalvikUWPCSharp.Reassembly.UI
 
         public async Task<UIElement> RenderXmlFile(StorageFile sf)
         {
-            //string decoded;
+            string decoded;
 
+            /*
             //using (MemoryStream stream = new MemoryStream(await Disassembly.Util.ReadFile(sf)))
 
-            //byte[] byteArray = await DalvikUWPCSharp.Disassembly.Util.ReadFile(sf);
-            //Stream stream = new MemoryStream(byteArray);
+            byte[] byteArray = await DalvikUWPCSharp.Disassembly.Util.ReadFile(sf);
+            Stream stream1 = new MemoryStream(byteArray, true);
+
+            //ZipArchive zzz = new ZipArchive(stream1);
+
+            //AndroidXmlReader testreader1 = new AndroidXmlReader(stream1);
+
             //this.zf = new ZipArchive(stream);
 
+
+            var testdocument1 = XDocument.Load(stream1);
+            */
+
+            MemoryStream teststream = new MemoryStream(await Disassembly.Util.ReadFile(sf));
+
+            //AndroidXmlReader testreader = new AndroidXmlReader(teststream);
+
+            //testreader.MoveToContent();
+
+            XDocument testdocument = null;
+
+            try
+            {
+                testdocument = XDocument.Load(teststream);//(testreader);
+                decoded = testdocument.ToString();
+            }
+            catch 
+            {
+                Debug.WriteLine("Houston, we have some problems!");
+            }
+
+            try
+            {
+                foreach (XElement xe in testdocument.Elements())
+                {
+                    //Should only be 1 element
+                    return await RenderObject(xe);
+                }
+            }
+            catch
+            {
+
+                Debug.WriteLine("! CRITICAL ERROR: Invalid XML File " + sf.DisplayName + " !");
+
+            }
+
+            /*
             //(stream)
             using (MemoryStream stream = new MemoryStream(await Disassembly.Util.ReadFile(sf)))
             {
                 AndroidXmlReader reader = new AndroidXmlReader(stream);
 
                 //RnD
-                reader.MoveToContent();
+                //reader.MoveToContent();
 
-                XDocument document = XDocument.Load(reader);
+                XDocument document = null;
+                try
+                {
+                    if (reader.ReadState == System.Xml.ReadState.Interactive)
+                    {
+                        document = XDocument.Load(reader);
+                    }
+                    else
+                    {
+                        //document = XDocument.Parse(reader); //  case where there is no content returned
+                    }
 
-                /*
-                string outerXml = reader.ReadOuterXml();
-
-                XDocument document = XDocument.Parse
-                (outerXml, 
-                    (LoadOptions.PreserveWhitespace |
-                    LoadOptions.SetBaseUri |
-                    LoadOptions.SetLineInfo)
-                );
-                */
+                    decoded = document.ToString();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Renderer - RenderXmlFile Exception: " + ex.Message);
+                }
 
                 //string p1nspace = "{http://schemas.android.com/apk/res/android}";
 
-                foreach (XElement xe in document.Elements())
+                try
                 {
-                    //Should only be 1 element
-                    return await RenderObject(xe);
+                    foreach (XElement xe in document.Elements())
+                    {
+                        //Should only be 1 element
+                        return await RenderObject(xe);
+                    }
                 }
+                catch
+                {
 
-                throw new Exception("Invalid XML File");
+                    Debug.WriteLine("! CRITICAL ERROR: Invalid XML File " + sf.DisplayName + " !");
+                    
+                }
                 //decoded = document.ToString();
 
+                
             }//using (MemoryStream...
+            */
 
             //RnD (TODO)
             //return decoded as UIElement;
 
+            return null;
+
         }//RenderXMLFile
+
 
         // RenderObject
         public async Task<UIElement> RenderObject(XElement xe)
@@ -251,7 +316,10 @@ namespace DalvikUWPCSharp.Reassembly.UI
                 throw new NotImplementedException($"UIElement {xe.Name.ToString()} is not currently implemented on this renderer.");
                 //return null;
             }
-        }
+
+        }//RenderObject end
+
+
 
         // DPtoEP(int i)
         public static double DPtoEP(int i)
@@ -265,6 +333,9 @@ namespace DalvikUWPCSharp.Reassembly.UI
 
             //ep = (dp/160) * 148
             return (i / 160) * 148;
-        }
-    }
-}
+
+        }//DPtoEP end
+    
+    }//Renderer class end
+
+}// namespace end

@@ -61,8 +61,11 @@ namespace DalvikUWPCSharp.Reassembly
             using (MemoryStream ms = new MemoryStream(xmlfile))
             {
                 AndroidXmlReader man = new AndroidXmlReader(ms);
+
                 man.MoveToContent();
+                
                 XDocument LINQData = new XDocument(man);
+
 
                 foreach (XElement xe in LINQData.Elements(XName.Get("activity")))
                 {

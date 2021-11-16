@@ -383,6 +383,7 @@ namespace DalvikUWPCSharp.Applet
             return files;
         }
 
+        // Install
         public async Task Install()
         {
             StorageFile dexFile = await localAppRoot.GetFileAsync("classes.dex");
@@ -427,6 +428,7 @@ namespace DalvikUWPCSharp.Applet
                         using (MemoryStream stream = new MemoryStream(await Disassembly.Util.ReadFile(sf)))
                         {
                             AndroidXmlReader reader = new AndroidXmlReader(stream);
+
                             reader.MoveToContent();
 
                             XDocument document = XDocument.Load(reader);

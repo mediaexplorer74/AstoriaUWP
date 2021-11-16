@@ -64,7 +64,18 @@ namespace DalvikUWPCSharp.Reassembly
 
                 string relPathKey = sf.Path.Remove(0, rootPathLength + 1).Replace('\\', '/');
 
-                byte[] file = await Disassembly.Util.ReadFile(sf);
+                //RnD  : try - catch
+
+                byte[] file = null;
+                try
+                {
+                    file = await Disassembly.Util.ReadFile(sf);
+                }
+                catch
+                {                   
+
+                    return;
+                }
 
                 files[relPathKey] = file;
 

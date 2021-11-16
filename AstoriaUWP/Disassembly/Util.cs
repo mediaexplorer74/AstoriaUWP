@@ -112,9 +112,11 @@ namespace DalvikUWPCSharp.Disassembly
                 using (IRandomAccessStreamWithContentType stream = await sf.OpenReadAsync())
                 {
                     fileBytes = new byte[stream.Size];
+                    
                     using (DataReader reader = new DataReader(stream))
                     {
                         await reader.LoadAsync((uint)stream.Size);
+
                         reader.ReadBytes(fileBytes);
                     }
                 }
@@ -125,7 +127,8 @@ namespace DalvikUWPCSharp.Disassembly
             }
 
             return fileBytes;
-        }
+
+        }//end
 
         public static List<string> GeneratePermissions()
         {

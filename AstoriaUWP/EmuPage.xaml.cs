@@ -1,58 +1,44 @@
 ﻿// EmuPage
-//
-//
-//
 
-using AndroidInteropLib;
-using AndroidInteropLib.android.view;
-using AndroidXml;
-using DalvikUWPCSharp.Applet;
-using DalvikUWPCSharp.Classes;
-using DalvikUWPCSharp.Reassembly;
-using DalvikUWPCSharp.Reassembly.UI;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Shapes;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
+using AndroidInteropLib;
+using AndroidInteropLib.android.view;
+using AndroidXml;
 
+using DalvikUWPCSharp.Applet;
+using DalvikUWPCSharp.Classes;
+using DalvikUWPCSharp.Reassembly;
+using DalvikUWPCSharp.Reassembly.UI;
+
+
+// DalvikUWPCSharp
 namespace DalvikUWPCSharp
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+    // EmuPage class
     public sealed partial class EmuPage : Page
     {
-        public DroidApp RunningApp;
+        public DroidApp RunningApp; //
 
-        // !
-        private Renderer UIRenderer;
+        private Renderer UIRenderer; // 
 
-        private DalvikCPU cpu;
-
+        private DalvikCPU cpu; //
 
 
+        // EmuPage
         public EmuPage()
         {
             this.InitializeComponent();
@@ -61,18 +47,20 @@ namespace DalvikUWPCSharp
             //RnD
             Windows.UI.Xaml.Window.Current.SizeChanged += Current_SizeChanged;
             
-        }
+        }//EmuPage end
 
-        // RnD start
+
+        // Current_SizeChanged
         private void Current_SizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
         {
             //UserControl appView = (UserControl)RenderTargetBox.Child;
             //appView.Width = (this.ActualWidth) * (40/37);
             //appView.Height = (this.ActualHeight - 48) * (40 / 37);
-        }
-        // RnD end
 
-        // 
+        }//Current_SizeChanged end 
+
+
+        // OnNavigatedTo
         protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             try
@@ -107,17 +95,22 @@ namespace DalvikUWPCSharp
 
 
 
-
+        // setPreloadStatusText
         public void setPreloadStatusText(string text)
         {
             statusTextblock.Text = text;
-        }
 
+        }//setPreloadStatusText end
+
+
+        // preloadDone
         public void preloadDone()
         {
             PreSplashGrid.Visibility = Visibility.Collapsed;
-        }
+        }//preloadDone end
 
+
+        // Render
         private async void Render()
         {
             var layout = await UIRenderer.CurrentApp.resFolder.GetFolderAsync("layout");
@@ -198,15 +191,20 @@ namespace DalvikUWPCSharp
             //RnD
             //await RenderPage();
 
-        }//
+        }//Render end
 
+
+        // SetContentView
         public void SetContentView(View v)
         {
             //TEST
             RenderTargetGrid.Children.Clear();
             RenderTargetGrid.Children.Add(v);
-        }
 
+        }//SetContentView end
+
+
+        // SetTitleBarColor 
         public void SetTitleBarColor(Color color)
         {
             var appView = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
@@ -231,23 +229,29 @@ namespace DalvikUWPCSharp
                 Windows.UI.ViewManagement.StatusBar.GetForCurrentView().ForegroundColor = Colors.White;
             }
 
-        }
+        }//SetTitleBarColor end
 
+        // SetNavBarColor
         public void SetNavBarColor(Color color)
         {
             NavBarBackgroundGrid.Background = new SolidColorBrush(color);
-        }
 
+        }//SetNavBarColor end
+
+
+        // SetWinBackColor
         public void SetWinBackColor(Color color)
         {
             //TEST
             RenderTargetGrid.Background = new SolidColorBrush(color);
-        }
 
+        }//SetWinBackColor end
+
+
+        // * RenderPage *
         private async Task RenderPage()
         {
             
-
             //Take content_main.xml and render it (for now)
             //var resFolder doc = RunningApp.localAppRoot.GetFolderAsync()
 
@@ -280,7 +284,7 @@ namespace DalvikUWPCSharp
                         foreach(XAttribute xa in xe.Attributes())
                         {
                             content += $"Attribute: {xa.Name}\nValue: {xa.Value}\nIsNamespaceDeclaration: {xa.IsNamespaceDeclaration}\n\n";
-                        } // * /
+                        } 
                         
                         //
                         foreach(XAttribute attr in xe.Attributes())
@@ -293,7 +297,7 @@ namespace DalvikUWPCSharp
                         //This is a hack
                         string[] content1 = xe.ToString().Split('"');
                         
-                        // *
+                        // ...
                         foreach(string s in content1)
                         {
                             if(!s.Contains("p1") && !s.Contains("-2"))
@@ -303,22 +307,25 @@ namespace DalvikUWPCSharp
                             }
                         }
                         string content2 = xe.Attribute(p1nspace+"text").Value;
+
                         //-2 represents "wrap_content", essentially "autosize"
                         int width = int.Parse(xe.Attribute(p1nspace + "layout_width").Value);
                         int height = int.Parse(xe.Attribute(p1nspace + "layout_height").Value);
+                        
                         //string content2 = "null";
                         tv.Text = content2;
 
-                        //RnD
                         RenderTargetGrid.Children.Add(tv);
                     }
                 }
                 
                 //decoded = document.ToString();
             }
-            // RnD end
-        }//RenderPage
+           
+        }//RenderPage end
 
+
+        // * EmuPage_Loaded *
         //Currently only support content_main.xml since the dissassembler cant yet parse activity_main.xml
         private void EmuPage_Loaded(object sender, RoutedEventArgs e)
         {
@@ -349,18 +356,26 @@ namespace DalvikUWPCSharp
 
             SystemNavigationManager.GetForCurrentView().BackRequested += EmuPage_BackRequested;
 
-        }// EmuPage_Loaded
+        }// EmuPage_Loaded end
 
+
+        // EmuPage_BackRequested
         private void EmuPage_BackRequested(object sender, BackRequestedEventArgs e)
         {
             GoBack(sender, null);
-        }
 
+        }//EmuPage_BackRequested end
+
+
+        // GoHome
         private void GoHome(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(MainPage));
-        }
 
+        }//GoHome end
+
+
+        // GoBack
         private void GoBack(object sender, RoutedEventArgs e)
         {
             try
@@ -372,6 +387,8 @@ namespace DalvikUWPCSharp
                 // Plan B - go home
                 Frame.Navigate(typeof(MainPage));
             }
-        }
-    }
-}
+        }//GoBack end
+
+    }//EmuPage class end
+
+}//namespace end
