@@ -1,4 +1,4 @@
-# AstoriaUWP 0.0.0.3
+# AstoriaUWP 0.0.0.4
 
 Forked from: https://github.com/Ticomware/AstoriaUWP
 
@@ -8,19 +8,8 @@ Forked from: https://github.com/Ticomware/AstoriaUWP
 Original status: Archived (Public archive)
 
 ## My actions (my 2 cents) 
-1. Min. OS build req. upgraded to 15063
-2. Fast RnD + lite "bugfixing" (some try...catch added to avoid accident app halts...)
-
-## Screenshots
-![Shot 1](Images/shot1.png)
-![Shot 2](Images/shot2.png)
-![Shot 3](Images/shot3.png)
-![Shot 4](Images/shot4.png)
-![Shot 5](Images/shot5.png)
-![Shot 6](Images/shot6.png)
-![Shot 7](Images/shot7.png)
-![Shot 8](Images/shot8.png)
-![Shot 9](Images/shot9.png)
+1. Renamed DalvikUWPCSharp.sln onto AstoriaUWP.sln :)
+2. Lite bugfix (some try...catch added to avoid accident app halts...)
 
 ## Description
 
@@ -32,6 +21,9 @@ As of August 9th, 2017 this project has not been actively maintained. Forks are 
 
 Note: This project was created as a proof-of-concept over a short amount of time. The code may not be perfect. It exists for demonstration and educational purposes. Feel free to fork this project!
 
+## Coding "workbench"
+Visual Studio 2022 (But VS 2017 compatibility remained, for Live WinPhone debugging, heh!)
+
 ## References
 This project uses code from the following projects:
 
@@ -41,13 +33,12 @@ This project uses code from the following projects:
 
 <a href="https://github.com/mariokmk/dex.net">dex.net</a>
 
-## Contribute!
+# Contribute!
 There's still a TON of things missing from this proof-of-concept (MVP) and areas of improvement 
 
 With best wishes,
 
   [m][e] 2021
 
-
-AstoriaUWP is RnD project only. AS-IS. No support. Distributed under the MIT License.
+NFC is RnD project only. AS-IS. No support. Distributed under the MIT License.
 

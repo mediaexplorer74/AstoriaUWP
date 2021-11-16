@@ -1,3 +1,5 @@
+// Dex.NET - Mario Kosmiskas
+
 using System;
 using System.IO;
 using System.Collections.Generic;
@@ -5,12 +7,6 @@ using System.Collections;
 using System.Text;
 using System.Threading;
 
-/// <summary>
-/// Dex.NET - Mario Kosmiskas
-/// 
-/// Provided under the Apache 2.0 License: http://www.apache.org/licenses/LICENSE-2.0
-/// Commercial use requires attribution
-/// </summary>
 namespace dex.net
 {
 	internal class DexReader : BinaryReader
