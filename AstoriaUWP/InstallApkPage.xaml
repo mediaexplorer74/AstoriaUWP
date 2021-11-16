@@ -18,13 +18,17 @@
                 <ColumnDefinition Width="60"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+            
             <Image x:Name="app_image" Width="30" Height="30" Source="Assets/Square150x150Logo.png"/>
+            
             <Rectangle x:Name="installBarChrome"  Margin="0" Stroke="Black" Grid.ColumnSpan="2" Height="4" VerticalAlignment="Bottom" Visibility="Collapsed">
                 <Rectangle.Fill>
                     <SolidColorBrush Color="{ThemeResource SystemBaseLowColor}"/>
                 </Rectangle.Fill>
             </Rectangle>
+            
             <ProgressBar x:Name="installProgbar" Grid.ColumnSpan="2" Height="4" Margin="0" VerticalAlignment="Bottom" IsIndeterminate="True"/>
+            
             <TextBlock x:Name="displayTitle" Grid.Column="1" Margin="0" TextWrapping="Wrap" Text="" VerticalAlignment="Center" FontSize="21.333"/>
         </Grid>
         
@@ -43,9 +47,10 @@
                     Click="install_Click"/>
             <!--Button x:Name="cancel_Button" Content="Cancel" HorizontalAlignment="Stretch" Margin="0,0,1,0" VerticalAlignment="Stretch" d:LayoutOverrides="LeftPosition, RightPosition, TopPosition, BottomPosition" Click="cancel_Button_Click"/-->
         </Grid>
+        
         <Grid Margin="16" Grid.Row="1">
             
-            <TextBlock x:Name="Description_Textblock" TextWrapping="Wrap" Text="" FontSize="18"/>
+            <TextBlock x:Name="Description_Textblock" TextWrapping="Wrap" Text="" FontSize="14"/>
             
             <!--Button x:Name="forcerlbutton" 
                     HorizontalAlignment="Stretch" Margin="179,0,35,189" 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DalvikUWPCSharp.Applet;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -358,7 +359,15 @@ namespace DalvikUWPCSharp.Disassembly.APKReader
                             String keyStr = keyStringPool[entry_key];
                             String data = null;
 
-                            Debug.WriteLine("Entry 0x" + idStr + ", key: " + keyStr + ", simple value type: ");
+                            string DiagData = "Entry 0x" + idStr + ", key: " + keyStr + ", simple value type: ";
+                            Debug.WriteLine(DiagData);//("Entry 0x" + idStr + ", key: " + keyStr + ", simple value type: ");
+
+                            //RnD
+
+                            // PUSH
+                            //App.GlobalStr = "Entry 0x" + idStr;
+
+                            //DroidApp.InvokeDiagEvent();
 
                             List<String> entryArr = null;
                             if (entryMap.ContainsKey(int.Parse(idStr, System.Globalization.NumberStyles.HexNumber)))

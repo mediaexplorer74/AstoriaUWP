@@ -55,7 +55,10 @@ namespace DalvikUWPCSharp
 
             //Applet_appletLoaded(null, EventArgs.Empty);
 
+            // !
             Applet.DroidApp.appletLoaded += appletLoaded;
+
+            Applet.DroidApp.DiagEventAppeared += DiagEventAppeared;
 
         }//InstallApkPage
 
@@ -63,7 +66,9 @@ namespace DalvikUWPCSharp
         // AddDebugMessage
         private void AddDebugMessage(string text)
         {
-            Description_Textblock.Text += $"\n{text}";
+            Window.Current.Activate();
+
+            Description_Textblock.Text += $" {text} ";//$"\n{text}";
         }//AddDebugMessage
 
 
@@ -119,8 +124,17 @@ namespace DalvikUWPCSharp
 
         }//appletLoaded
 
+        // ******************************************************************            
+        public void DiagEventAppeared(object sender, EventArgs e)
+        {
+            // POP 
+            AddDebugMessage(App.GlobalStr);  // REDO IT          
+        }//appletLoaded
 
-     
+        // ******************************************************************
+
+
+
         // cancel_Button_Click
         private async void cancel_Button_Click(object sender, RoutedEventArgs e)
         {

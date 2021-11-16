@@ -67,6 +67,7 @@ namespace DalvikUWPCSharp.Applet
                 IconPath = LINQData.Element("manifest").Element("application").Attribute("icon").Value;
 
                 //var a = LINQData.Element("manifest").Elements("")
+
                 DroidApp.InvokeLoadEvent();
             }
             catch (Exception ex)
@@ -99,6 +100,7 @@ namespace DalvikUWPCSharp.Applet
                 IconPath = LINQData.Element("manifest").Element("application").Attribute("androidicon").Value;
 
                 //var a = LINQData.Element("manifest").Elements("")
+
                 DroidApp.InvokeLoadEvent();
             }
             catch (Exception ex)

@@ -122,7 +122,7 @@
                 <ListViewItem Content="About" Background="#FF283238" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
                 <ListViewItem Content="Developer: Carl J. Bialorucki" Background="#FF283238" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
                 <ListViewItem Content="Publisher: Ticomware" Background="#FF283238" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
-                <ListViewItem Content="Version 0.0.0.2" Background="#FF283238" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
+                <ListViewItem Content="App Name: AstoriaUWP" Background="#FF283238" Padding="72,0,16,0" Height="72" FontSize="18.667" Margin="1"/>
             </ListView>
 
         </Grid>

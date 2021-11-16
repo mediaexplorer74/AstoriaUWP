@@ -1,4 +1,4 @@
-# AstoriaUWP 0.0.0.4
+# AstoriaUWP 0.0.0.5
 
 Forked from: https://github.com/Ticomware/AstoriaUWP
 
@@ -26,16 +26,10 @@ Note: This project was created as a proof-of-concept over a short amount of time
 ![Shot 1](Images/shot1.png)
 ![Shot 2](Images/shot2.png)
 ![Shot 3](Images/shot3.png)
-![Shot 4](Images/shot4.png)
-![Shot 5](Images/shot5.png)
-![Shot 6](Images/shot6.png)
-![Shot 7](Images/shot7.png)
-![Shot 8](Images/shot8.png)
-![Shot 9](Images/shot9.png)
-
 
 ## Coding "workbench"
 Visual Studio 2022 (But VS 2017 compatibility remained, for Live WinPhone debugging, heh!)
+Windows SDK 16053
 
 ## References
 This project uses code from the following projects:

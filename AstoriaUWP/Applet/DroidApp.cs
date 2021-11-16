@@ -33,8 +33,15 @@ namespace DalvikUWPCSharp.Applet
         private string apkName { get; set; }
         public StorageFile apkFile { get; private set; }
         public BitmapImage appIcon { get; private set; }
+
+        //
         public static event EventHandler appletLoaded = delegate { };
-        public EnhancedDexWriter dexWriter { get; private set; }
+
+        // !RnD !
+        public static event EventHandler DiagEventAppeared = delegate { };
+
+
+    public EnhancedDexWriter dexWriter { get; private set; }
         public Dex dex;
         public AstoriaContext context;
         public DalvikCPU cpu;
@@ -117,7 +124,9 @@ namespace DalvikUWPCSharp.Applet
 
                     appIcon = GetAppIcon();
 
-                    InvokeLoadEvent();
+                    // ! RnD !
+                    //InvokeLoadEvent();
+                    //DroidApp.InvokeDiagEvent();
 
                     resFolder = await localAppRoot.GetFolderAsync("res");
 
@@ -457,10 +466,17 @@ namespace DalvikUWPCSharp.Applet
             frame.Navigate(typeof(EmuPage), this);
         }
 
+        // Invoking func..
         public static void InvokeLoadEvent()
         {
             appletLoaded.Invoke("", EventArgs.Empty);
-        } 
-        
+        }
+
+        // ! RnD !
+        public static void InvokeDiagEvent()
+        {
+            DiagEventAppeared.Invoke("", EventArgs.Empty);
+        }
+
     }
 }
