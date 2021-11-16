@@ -28,14 +28,22 @@ Visual Studio 2022 (But VS 2017 compatibility remained, for Live WinPhone debugg
 Windows SDK 16053
 
 ## Test scenario
+
 Place _ASTORIA_/5 Test/testdpc7.apk at Pictures folder
+
 Run AstoriaUWP, and click Install Apk Button.
+
 After loading phase, click Install app button.
+
 After installing phase, click App list.
+
 Go to App Storage, find Layout folder.
+
 Place _ASTORIA_/5 Test/activity_main.xml at Layout folder.
-Try to run Emulator by tapping on TestDpc7 item
-In result, some button must be generated.
+
+Try to run Emulator by tapping on TestDpc7 item.
+
+In result, the button 1 must be generated on Emu screen...
 
 
 ## Project status
