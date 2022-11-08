@@ -38,7 +38,7 @@ It exists for demonstration and educational purposes. Feel free to fork this pro
 - Go to App Storage, find Layout folder.
 - Try to run Emulator by tapping on "Hello world" item at apps list
 
-In result, the phrase "Layout not found" must be appeared on Emu screen... or, maybe, "testbox" on right botoom corner :)
+In result, the phrase "Layout not found" must be appeared on Emu screen... or, maybe, "testbox" on right bottom corner :)
 
 
 ## Project status
