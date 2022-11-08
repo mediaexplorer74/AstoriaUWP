@@ -8,6 +8,7 @@ Forked from: https://github.com/Ticomware/AstoriaUWP
 ## Screenshots
 <p align="center">
   <img src="Images/shot1.png">
+  <img src="Images/shot2.png">
 </p>
 
 ## My actions (my 2 cents) 
