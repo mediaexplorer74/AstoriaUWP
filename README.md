@@ -57,12 +57,12 @@ There's still a TON of things missing from this proof-of-concept (MVP) and areas
 Feel free to PR your improvements for this experimental soft!
 
 ## ..
-AS IS. RnD only. Not for normal user's purposes, sorry.
+AS IS. No support, only src code. RnD only. Not for normal user's purposes, sorry. :(
 
 ## .
 With best wishes,
 
   [m][e] 2022
 
-AstoriaUWP is RnD project only. AS-IS. No support. Distributed under the MIT License.
+
 
