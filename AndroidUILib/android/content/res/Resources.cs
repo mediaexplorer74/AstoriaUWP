@@ -1,4 +1,6 @@
-﻿using AndroidInteropLib.android.util;
+﻿// Resources
+
+using AndroidInteropLib.android.util;
 using AndroidInteropLib.org.xmlpull.v1;
 using System;
 using System.Collections.Concurrent;
@@ -64,6 +66,13 @@ namespace AndroidInteropLib.android.content.res
         public virtual string[] getTextArray(int id)
         {
             throw new Exception("Must be overriden.");
+        }
+
+        internal string getResourceName(int resource)
+        {
+            //throw new Exception("Must be overriden.");
+            return getResourceName(int.Parse(resource.ToString(), System.Globalization.NumberStyles.HexNumber));
+            //return getResourceName(int.Parse(hexString, 16));
         }
 
         /*public class Theme

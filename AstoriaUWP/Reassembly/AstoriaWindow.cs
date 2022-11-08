@@ -70,6 +70,7 @@ namespace DalvikUWPCSharp.Reassembly
             emuPage.SetContentView(view);
         }
 
+        // set ContentView (layout resourse ID)
         public override void setContentView(int layoutResID)
         {
             LayoutInflater li = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

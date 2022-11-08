@@ -133,6 +133,9 @@ namespace DalvikUWPCSharp
                 };
 
                 ContentDialogResult result = await msgDialog.ShowAsync();
+
+                // return because of sf is null 
+                return;
             }
 
             UIElement child = null;

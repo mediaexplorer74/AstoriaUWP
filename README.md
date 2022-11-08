@@ -5,6 +5,11 @@ Forked from: https://github.com/Ticomware/AstoriaUWP
 ## Abstract
 "Project Astoria" remake (UWP)
 
+## Screenshots
+<p align="center">
+  <img src="Images/shot1.png">
+</p>
+
 ## My actions (my 2 cents) 
 - Some WIKI data added. 
 - Quick R.E. (some try...catch added to avoid accident app halts...)
@@ -32,14 +37,14 @@ It exists for demonstration and educational purposes. Feel free to fork this pro
 - Go to App Storage, find Layout folder.
 - Try to run Emulator by tapping on "Hello world" item at apps list
 
-In result, the phrase "Layout not found" must be appeared on Emu screen...
+In result, the phrase "Layout not found" must be appeared on Emu screen... or, maybe, "testbox" on right botoom corner :)
 
 
 ## Project status
-- Intro/RnD +- 10/100
+- Intro/RnD +- 12/100
 - Design +- 2/100 
 - Tech. project +- 20/100
-- Dev. project  +- 1/100
+- Dev. project  +- 2/100
 - Tests/Intro   +- 3/100
 
 
@@ -57,12 +62,12 @@ There's still a TON of things missing from this proof-of-concept (MVP) and areas
 Feel free to PR your improvements for this experimental soft!
 
 ## ..
-AS IS. No support, only src code. RnD only. Not for normal user's purposes, sorry. :(
+AS IS. RnD only. Not for normal user's purposes, sorry.
 
 ## .
 With best wishes,
 
   [m][e] 2022
 
-
+AstoriaUWP is RnD project only. AS-IS. No support. Distributed under the MIT License.
 

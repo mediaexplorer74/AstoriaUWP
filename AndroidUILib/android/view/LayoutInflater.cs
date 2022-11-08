@@ -1,4 +1,6 @@
-﻿using AndroidInteropLib.android.content;
+﻿// LayoutInflater
+
+using AndroidInteropLib.android.content;
 using AndroidInteropLib.android.content.res;
 using AndroidInteropLib.android.util;
 using AndroidInteropLib.org.xmlpull.v1;
@@ -10,8 +12,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// AndroidInteropLib.android.view
 namespace AndroidInteropLib.android.view
 {
+
+    // LayoutInflater class
     public abstract class LayoutInflater
     {
         bool DEBUG;
@@ -27,11 +32,13 @@ namespace AndroidInteropLib.android.view
         private const string TAG_REQUEST_FOCUS = "requestFocus";
         private const string TAG_TAG = "tag";
 
+        // LayoutInflater
         public LayoutInflater(Context context)
         {
             mContext = context;
-        }
+        }//LayoutInflater end
 
+        // LayoutInflater
         protected LayoutInflater(LayoutInflater original, Context newContext)
         {
             #if DEBUG
@@ -39,41 +46,61 @@ namespace AndroidInteropLib.android.view
             #endif
             mContext = newContext;
             //Clone og layoutinflator
-        }
+
+        }// LayoutInflater end
 
         public abstract LayoutInflater cloneInContext(Context newContext);
 
         //public abstract View createView(string name, string prefix, AttributeSet attrs);
 
+        // getContext
         public Context getContext()
         {
             return mContext;
-        }
 
+        }//getContext end
+
+
+        // getFactory
         public Factory getFactory()
         {
             return mFactory;
-        }
 
+        }//getFactory end
+
+
+        // getFactory2
         public Factory getFactory2()
         {
             return mFactory2;
-        }
 
+        }//getFactory2 end
+
+
+        // inflate
         public View inflate(int resource, ViewGroup root)
         {
             return inflate(resource, root, root != null);
-        }
 
+        }//inflate end
+
+
+        // inflate (resource, root, attachToRoot )
         public View inflate(int resource, ViewGroup root, bool attachToRoot)
         {
             Resources res = getContext().getResources();
 
-            if(DEBUG)
-            {
-                //Debug.WriteLine("INFLATING from resource: \"" + res.getResourceName(resource) + "\" (" + resource.ToString("X") + ")");
-            }
+            //if(DEBUG)
+            //{
+            Debug.WriteLine
+            (
+                "INFLATING from resource: \"" 
+                + res.getResourceName(resource) 
+                + "\" (" + resource.ToString("X") + ")"
+            );
+            //}
 
+            // parse layout resource
             XmlResourceParser parser = res.getLayout(resource);
 
             try
@@ -86,8 +113,10 @@ namespace AndroidInteropLib.android.view
                 parser.close();
             }
 
-        }
+        }//inflate end
 
+
+        // inflate (parser, root, attachToRoot)
         public virtual View inflate(XmlPullParser parser, ViewGroup root, bool attachToRoot)
         {
             //Trace.traceBegin(Trace.TRACE_TAG_VIEW, "inflate");
@@ -101,10 +130,16 @@ namespace AndroidInteropLib.android.view
             {
                 // Look for the root node.
                 int type;
-                while ((type = parser.next()) != XmlPullParser.START_TAG && type != XmlPullParser.END_DOCUMENT)
+                
+                // "parse next" ;)
+                while 
+                (
+                   (type = parser.next()) != XmlPullParser.START_TAG 
+                    && 
+                    type != XmlPullParser.END_DOCUMENT
+                )
                 {
-                    // Empty
-                    //"WHAT A MISTAKE!" - DJT; but this is how Android does it so we'll do it here :(
+                    // Empty (?)                    
                 }
 
                 if (type != XmlPullParser.START_TAG)
@@ -114,12 +149,12 @@ namespace AndroidInteropLib.android.view
 
                 string name = parser.getName();
 
-                if (DEBUG)
-                {
-                    Debug.WriteLine("**************************");
-                    Debug.WriteLine("Creating root view: " + name);
-                    Debug.WriteLine("**************************");
-                }
+                //if (DEBUG)
+                //{
+                Debug.WriteLine("**************************");
+                Debug.WriteLine("Creating root view: " + name);
+                Debug.WriteLine("**************************");
+                //}
 
                 if (TAG_MERGE.Equals(name))
                 {
@@ -156,18 +191,18 @@ namespace AndroidInteropLib.android.view
                         }
                     }
 
-                    if (DEBUG)
-                    {
-                        Debug.WriteLine("-----> start inflating children");
-                    }
+                    //if (DEBUG)
+                    //{
+                    Debug.WriteLine("-----> start inflating children");
+                    //}
 
                     // Inflate all children under temp
                     rInflate(parser, temp, attrs, true, true);
 
-                    if (DEBUG)
-                    {
-                        Debug.WriteLine("-----> done inflating children");
-                    }
+                    //if (DEBUG)
+                    //{
+                    Debug.WriteLine("-----> done inflating children");
+                    //}
 
                     // We are supposed to attach all the views we found (int temp)
                     // to root. Do that now.
@@ -201,8 +236,10 @@ namespace AndroidInteropLib.android.view
 
             return result;
 
-        }
+        }//inflate end
 
+
+        // createViewFromTag
         private View createViewFromTag(View parent, string name, AttributeSet attrs, bool inheritContext)
         {
             if (name.Equals("view"))
@@ -247,8 +284,8 @@ namespace AndroidInteropLib.android.view
                 return new BlinkLayout(viewContext, attrs);
             }*/
 
-            if (DEBUG)
-                Debug.WriteLine("******** Creating view: " + name);
+            //if (DEBUG)
+            Debug.WriteLine("******** Creating view: " + name);
 
             try
             {
@@ -295,8 +332,8 @@ namespace AndroidInteropLib.android.view
                     }
                 }
 
-                if (DEBUG)
-                    Debug.WriteLine("Created view is: " + view);
+                //if (DEBUG)
+                Debug.WriteLine("Created view is: " + view);
 
                 return view;
 
@@ -306,14 +343,30 @@ namespace AndroidInteropLib.android.view
                 Exception ie = new Exception(attrs.getPositionDescription() + ": Error inflating class " + name);
                 throw ie;
             }
-        }
 
-        void rInflate(XmlPullParser parser, View parent, AttributeSet attrs, bool finishInflate, bool inheritContext) 
+        }//createViewFromTag end
+
+        // rInflate (parser, parent, attrs, finishInflate, inheritContext)
+        void rInflate
+        (
+            XmlPullParser parser, 
+            View parent, 
+            AttributeSet attrs, 
+            bool finishInflate, 
+            bool inheritContext
+        ) 
         {
             int depth = parser.getDepth();
             int type;
 
-            while (((type = parser.next()) != XmlPullParser.END_TAG || parser.getDepth() > depth) && type != XmlPullParser.END_DOCUMENT)
+            while 
+            (
+                (
+                  (type = parser.next()) != XmlPullParser.END_TAG 
+                  || 
+                  parser.getDepth() > depth
+                ) 
+                && type != XmlPullParser.END_DOCUMENT)
             {
 
                 if (type != XmlPullParser.START_TAG)
@@ -357,19 +410,33 @@ namespace AndroidInteropLib.android.view
             }
 
             if (finishInflate) parent.onFinishInflate();
-        }
 
+        }//rInflate end
+
+
+        // parseRequestFocus
         private void parseRequestFocus(XmlPullParser parser, View view)
         {
             int type;
             view.requestFocus();
             int currentDepth = parser.getDepth();
-            while (((type = parser.next()) != XmlPullParser.END_TAG || parser.getDepth() > currentDepth) && type != XmlPullParser.END_DOCUMENT)
+            
+            while 
+            (
+                (
+                    (type = parser.next()) != XmlPullParser.END_TAG 
+                    || 
+                    parser.getDepth() > currentDepth
+                ) 
+                && type != XmlPullParser.END_DOCUMENT
+            )
             {
                 // Empty
             }
-        }
+        }//parseRequestFocus end
 
+
+        // parseViewTag (parser, view, attrs)
         private void parseViewTag(XmlPullParser parser, View view, AttributeSet attrs)
         {
             int type;
@@ -387,8 +454,11 @@ namespace AndroidInteropLib.android.view
             {
                 // Empty
             }
-        }
 
+        }//parseViewTag end
+
+
+        // parseInclude (parser, parent, attrs, inheritContext)
         private void parseInclude(XmlPullParser parser, View parent, AttributeSet attrs, bool inheritContext)
         {
             int type;
@@ -510,21 +580,34 @@ namespace AndroidInteropLib.android.view
             }
 
             int currentDepth = parser.getDepth();
-            while (((type = parser.next()) != XmlPullParser.END_TAG || parser.getDepth() > currentDepth) && type != XmlPullParser.END_DOCUMENT)
+            
+            while 
+            (
+                (
+                    (type = parser.next()) != XmlPullParser.END_TAG 
+                    || 
+                    parser.getDepth() > currentDepth
+                ) 
+                && type != XmlPullParser.END_DOCUMENT
+            )
             {
                 // Empty
             }
-        }
 
+        }//parseInclude end
+
+
+        // createView (name, prefix, attrs)
         public View createView(string name, string prefix, AttributeSet attrs)
         {
             //PoC
             try
             {
                 string fullname = "AndroidInteropLib." + (prefix != null ? (prefix + name) : name);
+                
                 Type viewType = Type.GetType(fullname);
                 
-                //RnD mode
+                //check if viewType is not null...
                 if (viewType != null)
                 {
                     View view = (View)Activator.CreateInstance(viewType, mContext, attrs);
@@ -546,48 +629,69 @@ namespace AndroidInteropLib.android.view
                 return nv;
                 //throw ex;
             }
-        }
+
+        }//createView end
 
 
+        // setFactory (factory)
         public void setFactory(Factory factory)
         {
             if(this.mFactory == null)
             {
                 this.mFactory = factory;
             }
-        }
 
+        }//setFactory end
+
+
+        // setFactory2
         public void setFactory2(Factory2 factory2)
         {
             if (this.mFactory2 == null)
             {
                 this.mFactory2 = factory2;
             }
-        }
 
+        }//setFactory2 end
+
+
+        // onCreateView (parent, name, attrs)
         protected View onCreateView(View parent, string name, AttributeSet attrs)
         {
-            return null;
+            return null; // ?
             //return createViewFromTag(parent, name, attrs, true);
             //return onCreateView(name, attrs);
-        }
 
+        }//onCreateView end 
+
+
+        // onCreateView (name, attrs)
         protected View onCreateView(string name, AttributeSet attrs)
         {
-            return null;
+            return null; // ?
             //return createViewFromTag(null, name, attrs, true);
             //throw new NotImplementedException();
-        }
 
+        }//onCreateView end
+
+
+        // Factory interface (no parent)
         public interface Factory
         {
+            // onCreateView (name, context, attrs)
             View onCreateView(string name, Context context, AttributeSet attrs);
-        }
 
+        }//Factory end
+
+
+        // Factory2 interface (parent exists)
         public interface Factory2 : Factory
         {
+            // // onCreateView (parent, name, context, attrs)
             View onCreateView(View parent, string name, Context context, AttributeSet attrs);
-        }
+        
+        }//Factory2 end
 
-    }
-}
+    }//LayoutInflater class end
+
+}//AndroidInteropLib.android.view namespace end
