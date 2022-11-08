@@ -102,7 +102,15 @@ namespace DalvikUWPCSharp.Classes
                     break;
                 case Instructions.InvokeVirtual:
                     InvokeVirtualOpCode ivop = (InvokeVirtualOpCode)op;
-                    RunMethod(dex.GetMethod(ivop.MethodIndex), c, Registers[ivop.ArgumentRegisters[1]]);
+
+                    try
+                    {
+                        RunMethod(dex.GetMethod(ivop.MethodIndex), c, Registers[ivop.ArgumentRegisters[1]]);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("[ex] Dalvik CPU Exception : " + ex.Message);
+                    }
                     break;
                 case Instructions.MoveResult:
                     MoveResultOpCode movR = (MoveResultOpCode)op;

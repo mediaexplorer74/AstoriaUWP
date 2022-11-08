@@ -446,7 +446,7 @@ namespace DalvikUWPCSharp.Disassembly.APKReader
 
         private string[] processStringPool(byte[] data)
         {
-            long lastPosition = 0;
+            //long lastPosition = 0;
 
             using (MemoryStream ms = new MemoryStream(data))
             {

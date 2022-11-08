@@ -337,6 +337,7 @@ namespace DalvikUWPCSharp
             }
             catch (Exception ex1)
             {
+                Debug.WriteLine("[ex] EmuPage_Loaded problems: " + ex1.Message);
                 //Plan A
                 //var dialog = new MessageDialog($"RunningApp.metadata is null (broken object)  \n\n{ex1.Message}");
                 //dialog.ShowAsync();

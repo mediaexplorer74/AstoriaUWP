@@ -1,3 +1,0 @@
-<FrameLayout p1:orientation="1" p1:layout_width="-1" p1:layout_height="-1" p1:paddingStart="20dip" p1:paddingEnd="20dip" xmlns:p1="http://schemas.android.com/apk/res/android">
-  <EditText p1:id="@01020003" p1:layout_width="-1" p1:layout_height="-2" p1:maxLines="1"></EditText>
-</FrameLayout>

@@ -523,16 +523,17 @@ namespace AndroidInteropLib.android.view
             {
                 string fullname = "AndroidInteropLib." + (prefix != null ? (prefix + name) : name);
                 Type viewType = Type.GetType(fullname);
-                if(viewType != null)
+                
+                //RnD mode
+                if (viewType != null)
                 {
                     View view = (View)Activator.CreateInstance(viewType, mContext, attrs);
                     return view;
                 }
-
                 else
                 {
                     NullView nv = new NullView(mContext, attrs);
-                    nv.setText("View not found: " + name);
+                    nv.setText("[!] View not found: " + name);
                     return nv;
                 }
                 //TODO: Check w/ filter if view is allowed
@@ -541,7 +542,7 @@ namespace AndroidInteropLib.android.view
             {
                 //Maybe in the future return a black box with layout info saying "loading failed?"
                 NullView nv = new NullView(mContext, attrs);
-                nv.setText("View not found: " + name + $"\n\n{ex.Message}");
+                nv.setText("[>] View not found: " + name + $"\n\n{ex.Message}");
                 return nv;
                 //throw ex;
             }
