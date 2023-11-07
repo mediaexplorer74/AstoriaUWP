@@ -9,11 +9,13 @@ Forked from: https://github.com/Ticomware/AstoriaUWP
 <p align="center">
   <img src="Images/shot1.png">
   <img src="Images/shot2.png">
+  <img src="Images/shot3.png">
 </p>
 
 ## My actions (my 2 cents) 
 - Some WIKI data added. 
-- Quick R.E. (some try...catch added to avoid accident app halts...)
+- Quick R.E. (only some try...catch added to avoid accident app halts... and nothing more)
+- DEX 7 detected (see Images/uc83.apk sample that can't de-dexed).
 
 ## Description
 "Astoria for Universal Windows Platform" (AstoriaUWP) is an APK interpreter for the Universal Windows Platform. 
@@ -42,11 +44,11 @@ In result, the phrase "Layout not found" must be appeared on Emu screen... or, m
 
 
 ## Project status
-- Intro/RnD +- 12/100
-- Design +- 2/100 
-- Tech. project +- 20/100
-- Dev. project  +- 2/100
-- Tests/Intro   +- 3/100
+- Intro/RnD +- 13/100
+- Design +- 3/100 
+- Tech. project +- 21/100
+- Dev. project  +- 3/100
+- Tests/Intro   +- 4/100
 
 
 ## References
@@ -62,13 +64,14 @@ AstoriaUWP also used some code from the following projects:
 There's still a TON of things missing from this proof-of-concept (MVP) and areas of improvement. Help wanted. 
 Feel free to PR your improvements for this experimental soft!
 
-## ..
-AS IS. RnD only. Not for normal user's purposes, sorry.
+## References / License
+- (Ticomware)[https://github.com/Ticomware/]
+- Apache License
 
 ## .
 With best wishes,
 
-  [m][e] 2022
+  [m][e] 2022--2023
 
 AstoriaUWP is RnD project only. AS-IS. No support. Distributed under the MIT License.
 
