@@ -91,9 +91,17 @@ namespace dex.net
 				throw new ArgumentException(string.Format("Invalid DEX file - wrong signature. Found {0}", fileMagic));
 			}
 
+			// Add support for DEX version 7 (037) and other versions
+			// We'll read the version but not restrict to specific versions
+
 
 			DexHeader header = new DexHeader();
-			header.ApiVersion = Encoding.UTF8.GetString (reader.ReadBytes (4));
+			// Read API version (e.g., "035\0", "037\0" for DEX 7, etc.)
+			header.ApiVersion = Encoding.UTF8.GetString(reader.ReadBytes(4));
+			
+			// Log the detected DEX version
+			Console.WriteLine("DEX API Version: " + header.ApiVersion);
+			
 			header.Checksum = reader.ReadUInt32();
 			header.Signature = reader.ReadBytes(20);
 			header.FileSize = reader.ReadUInt32();

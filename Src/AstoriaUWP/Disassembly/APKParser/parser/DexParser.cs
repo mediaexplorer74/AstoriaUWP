@@ -1,4 +1,4 @@
-﻿using DalvikUWPCSharp.Disassembly.APKParser.bean;
+using DalvikUWPCSharp.Disassembly.APKParser.bean;
 using DalvikUWPCSharp.Disassembly.APKParser.struct_;
 using DalvikUWPCSharp.Disassembly.APKParser.struct_.dex;
 using DalvikUWPCSharp.Disassembly.APKParser.utils;
@@ -33,14 +33,19 @@ namespace DalvikUWPCSharp.Disassembly.APKParser.parser
             {
                 return;
             }
-            int version = int.Parse(magic.Substring(4, 7));
-            // now the version is 035
+            int version = int.Parse(magic.Substring(4, 3));
+            // Support for DEX versions: 035, 037 (DEX 7), 038, 039, etc.
+            // version 009 was used for the M3 releases of the Android platform (November–December 2007),
+            // version 013 was used for the M5 releases of the Android platform (February–March 2008)
+            // version 035 is used in Android 5.0+
+            // version 037 is used in Android 7.0+
+            // version 038 is used in Android 8.0+
+            // version 039 is used in Android 9.0+
             if (version < 35)
             {
-                // version 009 was used for the M3 releases of the Android platform (November–December 2007),
-                // and version 013 was used for the M5 releases of the Android platform (February–March 2008)
                 throw new Exception("Dex file version: " + version + " is not supported");
             }
+            Console.WriteLine("Detected DEX version: " + version);
 
             // read header
             DexHeader header = readDexHeader();
