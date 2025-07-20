@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Uwp;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,61 @@ namespace DalvikUWPCSharp.Reassembly.UI
             }
 
             return c;
+        }
+
+        public static Color FromString(string colorString)
+        {
+            if (string.IsNullOrEmpty(colorString))
+            {
+                throw new ArgumentException("Color string is null or empty", nameof(colorString));
+            }
+
+            if (colorString.StartsWith("#"))
+            {
+                // Handle hex color string
+                colorString = colorString.TrimStart('#');
+                if (colorString.Length == 3)
+                {
+                    // Handle short hex color string (e.g. #FFF)
+                    colorString = $"{colorString[0]}{colorString[0]}{colorString[1]}{colorString[1]}{colorString[2]}{colorString[2]}";
+                }
+                else if (colorString.Length != 6 && colorString.Length != 8)
+                {
+                    throw new ArgumentException("Invalid hex color string", nameof(colorString));
+                }
+
+                try
+                {
+                    var color = new Color();
+                    color.A = colorString.Length == 8 ? byte.Parse(colorString.Substring(0, 2), NumberStyles.HexNumber) : (byte)255;
+                    color.R = byte.Parse(colorString.Substring(colorString.Length == 8 ? 2 : 0, 2), NumberStyles.HexNumber);
+                    color.G = byte.Parse(colorString.Substring(colorString.Length == 8 ? 4 : 2, 2), NumberStyles.HexNumber);
+                    color.B = byte.Parse(colorString.Substring(colorString.Length == 8 ? 6 : 4, 2), NumberStyles.HexNumber);
+                    return color;
+                }
+                catch (FormatException)
+                {
+                    throw new ArgumentException("Invalid hex color string", nameof(colorString));
+                }
+            }
+            else
+            {
+                // Handle named color string (e.g. "Red", "Blue", etc.)
+                try
+                {
+                    Color color = Color.FromArgb(
+                        255, // alpha
+                        Convert.ToByte(colorString.Substring(1, 2), 16),
+                        Convert.ToByte(colorString.Substring(3, 2), 16),
+                        Convert.ToByte(colorString.Substring(5, 2), 16)
+                    );
+                    return color;
+                }
+                catch (FormatException)
+                {
+                    throw new ArgumentException("Invalid color string", nameof(colorString));
+                }
+            }
         }
 
         private static byte Max(byte x, byte y, byte z)

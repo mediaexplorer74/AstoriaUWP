@@ -1,4 +1,4 @@
-﻿using AndroidInteropLib.android.content.res;
+using AndroidInteropLib.android.content.res;
 using AndroidInteropLib.org.xmlpull.v1;
 using AndroidXml;
 using System;
@@ -24,37 +24,44 @@ namespace DalvikUWPCSharp.Reassembly
 
         public override void setFeature(string name, bool state)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaXmlParser] setFeature not implemented: {name}");
+            // No-op fallback
         }
 
         public override bool getFeature(string name)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaXmlParser] getFeature not implemented: {name}");
+            return false;
         }
 
         public override void setProperty(string name, object value)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaXmlParser] setProperty not implemented: {name}");
+            // No-op fallback
         }
 
         public override object getProperty(string name)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaXmlParser] getProperty not implemented: {name}");
+            return null;
         }
 
         public override string getInputEncoding()
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine("[AstoriaXmlParser] getInputEncoding not implemented");
+            return "utf-8";
         }
 
         public override void defineEntityReplacementText(string entityName, string replacementText)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaXmlParser] defineEntityReplacementText not implemented: {entityName}");
+            // No-op fallback
         }
 
         public override int getNamespaceCount(int depth)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaXmlParser] getNamespaceCount not implemented: {depth}");
+            return 0;
         }
 
         public override string getNamespacePrefix(int pos)
@@ -144,22 +151,26 @@ namespace DalvikUWPCSharp.Reassembly
 
         public override string getAttributeNamespace(int index)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaXmlParser] getAttributeNamespace not implemented: {index}");
+            return string.Empty;
         }
 
         public override string getAttributeName(int index)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaXmlParser] getAttributeName not implemented: {index}");
+            return string.Empty;
         }
 
         public override string getAttributePrefix(int index)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaXmlParser] getAttributePrefix not implemented: {index}");
+            return string.Empty;
         }
 
         public override string getAttributeType(int index)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaXmlParser] getAttributeType not implemented: {index}");
+            return "CDATA";
         }
 
         public override bool isAttributeDefault(int index)
@@ -187,7 +198,8 @@ namespace DalvikUWPCSharp.Reassembly
 
         public override int getEventType()
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine("[AstoriaXmlParser] getEventType not implemented");
+            return -1;
         }
 
         public override int next()

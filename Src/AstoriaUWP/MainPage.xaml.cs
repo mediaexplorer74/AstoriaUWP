@@ -1,4 +1,4 @@
-﻿using DalvicUWPCSharp.Model;
+using DalvicUWPCSharp.Model;
 using DalvikUWPCSharp.Applet;
 using DalvikUWPCSharp.Classes;
 using System;
@@ -42,20 +42,26 @@ namespace DalvikUWPCSharp
         {
             SetTitleBarColor();
 
+            // Load and render the new ShapeView primitives demo layout
+            /*try
+            {
+                var layoutFile = await StorageFile.GetFileFromApplicationUriAsync(
+                      new Uri("ms-appx:///Assets/SampleLayouts/shapeview_primitives_demo.xml"));
+                var renderer = new DalvikUWPCSharp.Reassembly.UI.Renderer(null);
+                var layoutElement = await renderer.RenderXmlFile(layoutFile);
+                if (layoutElement != null)
+                {
+                    bgGrid.Children.Add(layoutElement);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to load shapeview_primitives_demo.xml: {ex.Message}");
+            }*/
+
             var appsRoot = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Apps", CreationCollisionOption.OpenIfExists);
-
-            // DEBUG
-            //var dialog = new MessageDialog("ppsRoot is:  " + appsRoot.GetFoldersAsync() + " .");
-            //await dialog.ShowAsync();
-
-            // appsRoot.GetFoldersAsync() - get subfolders of (in) appsRoot folder
             foreach (StorageFolder sf in await appsRoot.GetFoldersAsync())
             {
-
-                // DEBUG
-                //var dialog = new MessageDialog("App  " + sf.Path + " added.");
-                //await dialog.ShowAsync();
-
                 AppListBox.Items.Add(sf.Name);
             }
 

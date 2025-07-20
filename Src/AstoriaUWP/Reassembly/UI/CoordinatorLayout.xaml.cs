@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -37,13 +37,17 @@ namespace DalvikUWPCSharp.Reassembly.UI
                         subContainer.Margin = new Thickness(0, ((Grid)element).Height, 0, 0);
                         ((Grid)element).VerticalAlignment = VerticalAlignment.Top;
                         container.Children.Add(element);
+                        System.Diagnostics.Debug.WriteLine($"[CoordinatorLayout] Added toolbar grid with height {((Grid)element).Height}");
                         return;
                     }
                 }
-
                 subContainer.Children.Add(element);
+                System.Diagnostics.Debug.WriteLine($"[CoordinatorLayout] Added element of type {element.GetType().Name} to subContainer");
             }
-            
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("[CoordinatorLayout] Attempted to add null element");
+            }
         }
     }
 }

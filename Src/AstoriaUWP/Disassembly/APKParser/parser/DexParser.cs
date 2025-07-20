@@ -4,6 +4,7 @@ using DalvikUWPCSharp.Disassembly.APKParser.struct_.dex;
 using DalvikUWPCSharp.Disassembly.APKParser.utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,7 +46,7 @@ namespace DalvikUWPCSharp.Disassembly.APKParser.parser
             {
                 throw new Exception("Dex file version: " + version + " is not supported");
             }
-            Console.WriteLine("Detected DEX version: " + version);
+            Debug.WriteLine("Detected DEX version: " + version);
 
             // read header
             DexHeader header = readDexHeader();

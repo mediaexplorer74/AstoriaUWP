@@ -1,7 +1,8 @@
-﻿// Reassembly - UI - Renderer
+// Reassembly - UI - Renderer
 
 using AndroidInteropLib.android.content;
 using AndroidInteropLib.android.support.design.widget;
+using AndroidInteropLib.ticomware.interop;
 using AndroidXml;
 using DalvikUWPCSharp.Applet;
 using System;
@@ -158,85 +159,87 @@ namespace DalvikUWPCSharp.Reassembly.UI
 
             if (xeName.Equals("android.support.design.widget.AppBarLayout"))
             {
-                //This manipulates the appbar. For now, let's just make it a grid. Usually contains toolbar.
-                
-                //double height = DPtoEP(56);
-                
                 Grid container = new Grid();
                 container.VerticalAlignment = VerticalAlignment.Top;
                 container.HorizontalAlignment = HorizontalAlignment.Stretch;
-
-                container.Height = attr.actionBarSize; //DPtoEP(56);
-
-                if(nestedObjs)
+                if (xe.Attribute(p1nspace + "layout_width") != null)
+                    container.Width = double.TryParse(xe.Attribute(p1nspace + "layout_width").Value, out var w) ? w : container.Width;
+                if (xe.Attribute(p1nspace + "layout_height") != null)
+                    container.Height = double.TryParse(xe.Attribute(p1nspace + "layout_height").Value, out var h) ? h : container.Height;
+                if (xe.Attribute(p1nspace + "background") != null)
+                    container.Background = new SolidColorBrush(ColorUtil.FromString(xe.Attribute(p1nspace + "background").Value));
+                if (nestedObjs)
                 {
-                    foreach(XElement xe1 in xe.Elements())
+                    foreach (XElement xe1 in xe.Elements())
                     {
                         container.Children.Add(await RenderObject(xe1));
                     }
                 }
                 return container;
             }
-
             else if (xeName.Equals("android.support.design.widget.CoordinatorLayout"))
             {
                 CoordinatorLayout cl = new CoordinatorLayout();
-                if(nestedObjs)
+                if (xe.Attribute(p1nspace + "layout_width") != null)
+                    cl.Width = double.TryParse(xe.Attribute(p1nspace + "layout_width").Value, out var w) ? w : cl.Width;
+                if (xe.Attribute(p1nspace + "layout_height") != null)
+                    cl.Height = double.TryParse(xe.Attribute(p1nspace + "layout_height").Value, out var h) ? h : cl.Height;
+                if (xe.Attribute(p1nspace + "background") != null)
+                    cl.Background = new SolidColorBrush(ColorUtil.FromString(xe.Attribute(p1nspace + "background").Value));
+                if (nestedObjs)
                 {
-                    foreach(XElement xe1 in xe.Elements())
+                    foreach (XElement xe1 in xe.Elements())
                     {
                         cl.Add(await RenderObject(xe1));
                     }
                 }
-
                 return cl;
-                
             }
-
-            else if(xeName.Equals("android.support.design.widget.FloatingActionButton"))
+            else if (xeName.Equals("android.support.design.widget.FloatingActionButton"))
             {
-                //Ignore gravity for now, is typically bottom right
-                //Button FAB = new Button();
-                //FloatingActionButton FAB = new FloatingActionButton(context, new AstoriaAttrSet(xe));
-                //FAB.HorizontalAlignment = HorizontalAlignment.Right;
-                //FAB.VerticalAlignment = VerticalAlignment.Bottom;
-                //FAB.Width = 52;
-                //FAB.Height = 52;
-                //xe.Attribute(XName.Get())
-                //FAB.Content = "src: " + xe.Attribute(XName.Get(p1nspace + "src")).Value;
-                //FAB.Content = "src: " + CurrentApp.metadata.resStrings[xe.Attribute(XName.Get(p1nspace + "src")).Value][0];
-                //FAB.Margin = new Thickness(10);
-                return null;
-                //return FAB;
+                Button fab = new Button();
+                fab.Width = 56; fab.Height = 56;
+                fab.HorizontalAlignment = HorizontalAlignment.Right;
+                fab.VerticalAlignment = VerticalAlignment.Bottom;
+                fab.Margin = new Thickness(16);
+                fab.Content = "+";
+                fab.Background = new SolidColorBrush(Windows.UI.Colors.DeepSkyBlue);
+                fab.Foreground = new SolidColorBrush(Windows.UI.Colors.White);
+                fab.CornerRadius = new Windows.UI.Xaml.CornerRadius(28);
+                return fab;
             }
-
-            else if(xeName.Equals("android.support.v7.widget.Toolbar"))
+            else if (xeName.Equals("android.support.v7.widget.Toolbar"))
             {
-                //return null;
-                //Read attributes on toolbar and return it
                 AndroidToolbar at = new AndroidToolbar();
-                at.SetTitle(CurrentApp.metadata.label);
-                //at.Height = DPtoEP(56);
-
+                if (xe.Attribute(p1nspace + "title") != null)
+                    at.SetTitle(xe.Attribute(p1nspace + "title").Value);
+                else
+                    at.SetTitle(CurrentApp.metadata.label);
+                if (xe.Attribute(p1nspace + "background") != null)
+                    at.Background = new SolidColorBrush(ColorUtil.FromString(xe.Attribute(p1nspace + "background").Value));
                 return at;
             }
-
-            else if(xeName.Equals("include"))
+            else if (xeName.Equals("include"))
             {
-                //Get layout attribute, render the .xml, and return that
-                //return null;
-                string relUri = xe.Attribute("layout").Value;
-                //Take current app path, pass 
-                string path = CurrentApp.resFolder.Path + relUri.Replace('@', '\\').Replace('/', '\\') + ".xml";
-                StorageFile sf = await StorageFile.GetFileFromPathAsync(path);
-
-                return await RenderXmlFile(sf);
+                try {
+                    string relUri = xe.Attribute("layout").Value;
+                    string path = CurrentApp.resFolder.Path + relUri.Replace('@', '\\').Replace('/', '\\') + ".xml";
+                    StorageFile sf = await StorageFile.GetFileFromPathAsync(path);
+                    return await RenderXmlFile(sf);
+                } catch {
+                    Debug.WriteLine("[Renderer] Failed to include layout: " + xe);
+                    return null;
+                }
             }
-
             else if (xeName.Equals("RelativeLayout"))
             {
-                //Return Grid with objects inside
                 Grid container = new Grid();
+                if (xe.Attribute(p1nspace + "layout_width") != null)
+                    container.Width = double.TryParse(xe.Attribute(p1nspace + "layout_width").Value, out var w) ? w : container.Width;
+                if (xe.Attribute(p1nspace + "layout_height") != null)
+                    container.Height = double.TryParse(xe.Attribute(p1nspace + "layout_height").Value, out var h) ? h : container.Height;
+                if (xe.Attribute(p1nspace + "background") != null)
+                    container.Background = new SolidColorBrush(ColorUtil.FromString(xe.Attribute(p1nspace + "background").Value));
                 if (nestedObjs)
                 {
                     foreach (XElement xe1 in xe.Elements())
@@ -244,40 +247,34 @@ namespace DalvikUWPCSharp.Reassembly.UI
                         container.Children.Add(await RenderObject(xe1));
                     }
                 }
-
                 return container;
             }
-
             else if (xeName.Equals("TextView"))
             {
                 TextBlock tv = new TextBlock();
-
-                string content = xe.Attribute(p1nspace + "text").Value;
-                tv.Text = content;
-                //Default left padding is 16dp left, 8dp tall
+                if (xe.Attribute(p1nspace + "text") != null)
+                    tv.Text = xe.Attribute(p1nspace + "text").Value;
                 tv.Margin = new Thickness(14.8, 7.4, 14.8, 7.4);
-                //-2 represents "wrap_content", essentially "autosize"
-                int width = int.Parse(xe.Attribute(p1nspace + "layout_width").Value);
-                int height = int.Parse(xe.Attribute(p1nspace + "layout_height").Value);
-
-                if(width > -1)
+                if (xe.Attribute(p1nspace + "layout_width") != null && double.TryParse(xe.Attribute(p1nspace + "layout_width").Value, out var w))
+                    tv.Width = w;
+                if (xe.Attribute(p1nspace + "layout_height") != null && double.TryParse(xe.Attribute(p1nspace + "layout_height").Value, out var h))
+                    tv.Height = h;
+                if (xe.Attribute(p1nspace + "textColor") != null)
+                    tv.Foreground = new SolidColorBrush(ColorUtil.FromString(xe.Attribute(p1nspace + "textColor").Value));
+                if (xe.Attribute(p1nspace + "textSize") != null && double.TryParse(xe.Attribute(p1nspace + "textSize").Value, out var sz))
+                    tv.FontSize = sz;
+                if (xe.Attribute(p1nspace + "gravity") != null)
                 {
-                    tv.Width = width;
+                    string gravity = xe.Attribute(p1nspace + "gravity").Value.ToLower();
+                    if (gravity.Contains("center")) tv.TextAlignment = TextAlignment.Center;
+                    else if (gravity.Contains("right")) tv.TextAlignment = TextAlignment.Right;
+                    else tv.TextAlignment = TextAlignment.Left;
                 }
-
-                if(height > -1)
-                {
-                    tv.Height = height;
-                }
-
-                //Default text color is gray 115
-                tv.Foreground = new SolidColorBrush(Color.FromArgb(255, 115, 115, 115));
                 return tv;
             }
-            // *** experimental - begin ***
             else if (xeName.Equals("FrameLayout"))
             {
-                /*
+               
                 //Return Grid with objects inside
                 Grid container = new Grid();
                 if (nestedObjs)
@@ -289,32 +286,85 @@ namespace DalvikUWPCSharp.Reassembly.UI
                 }
 
                 return container;
-                */
-
-                //Ignore gravity for now, is typically bottom right
-                Button FAB = new Button();
-                
-                //Context context = new Context();
-
-                //FloatingActionButton FAB = new FloatingActionButton(context, new AstoriaAttrSet(xe));
-                FAB.HorizontalAlignment = HorizontalAlignment.Right;
-                FAB.VerticalAlignment = VerticalAlignment.Bottom;
-                FAB.Width = 52;
-                FAB.Height = 52;
-                
-                //xe.Attribute(XName.Get())
-                //FAB.Content = "src: " + xe.Attribute(XName.Get(p1nspace + "src")).Value;
-                //FAB.Content = "src: " + CurrentApp.metadata.resStrings[xe.Attribute(XName.Get(p1nspace + "src")).Value][0];
-                
-                FAB.Margin = new Thickness(10);
-                //return null;
-                return FAB;
             }
-            // *** experimental - end ***
+            // *** experimental - begin ***
+            else if (xeName.Equals("ShapeView") 
+                || xeName.Equals(/*"android.ticomware.interop.ShapeView"*/"com.example.shapeviewdemo.ShapeView"))
+            {
+                Debug.WriteLine($"[Renderer] Creating ShapeView for element: {xe}");
+                ShapeView shapeView = new ShapeView(new AstoriaContext(), new AstoriaAttrSet(xe));
+                try
+                {
+                    string primitive = xe.Attribute("primitive")?.Value?.ToLower() ?? "rectangle";
+                    Windows.UI.Color color = Windows.UI.Colors.White;
+                    if (xe.Attribute("color") != null)
+                    {
+                        color = ColorUtil.FromString(xe.Attribute("color").Value);
+                    }
+                    switch (primitive)
+                    {
+                        case "rectangle":
+                        {
+                            double width = xe.Attribute("width") != null ? double.Parse(xe.Attribute("width").Value) : 100;
+                            double height = xe.Attribute("height") != null ? double.Parse(xe.Attribute("height").Value) : 100;
+                            shapeView.DrawRectangle(width, height, color);
+                            break;
+                        }
+                        case "ellipse":
+                        {
+                            double width = xe.Attribute("width") != null ? double.Parse(xe.Attribute("width").Value) : 100;
+                            double height = xe.Attribute("height") != null ? double.Parse(xe.Attribute("height").Value) : 100;
+                            shapeView.DrawEllipse(width, height, color);
+                            break;
+                        }
+                        case "line":
+                        {
+                            double x1 = xe.Attribute("x1") != null ? double.Parse(xe.Attribute("x1").Value) : 0;
+                            double y1 = xe.Attribute("y1") != null ? double.Parse(xe.Attribute("y1").Value) : 0;
+                            double x2 = xe.Attribute("x2") != null ? double.Parse(xe.Attribute("x2").Value) : 100;
+                            double y2 = xe.Attribute("y2") != null ? double.Parse(xe.Attribute("y2").Value) : 100;
+                            double thickness = xe.Attribute("thickness") != null ? double.Parse(xe.Attribute("thickness").Value) : 2;
+                            shapeView.DrawLine(x1, y1, x2, y2, thickness, color);
+                            break;
+                        }
+                        case "point":
+                        {
+                            double x = xe.Attribute("x") != null ? double.Parse(xe.Attribute("x").Value) : 50;
+                            double y = xe.Attribute("y") != null ? double.Parse(xe.Attribute("y").Value) : 50;
+                            double diameter = xe.Attribute("diameter") != null ? double.Parse(xe.Attribute("diameter").Value) : 8;
+                            shapeView.DrawPoint(x, y, diameter, color);
+                            break;
+                        }
+                        default:
+                            Debug.WriteLine($"[Renderer] Unknown primitive type: {primitive}, defaulting to rectangle.");
+                            shapeView.DrawRectangle(100, 100, color);
+                            break;
+                    }
+                    if (xe.Attribute("background") != null)
+                    {
+                        Windows.UI.Color bgColor = ColorUtil.FromString(xe.Attribute("background").Value);
+                        shapeView.SetBackgroundColor(bgColor);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Renderer] Error rendering ShapeView primitive: {ex.Message}");
+                }
+                return shapeView;
+            }
+            // *** experimental - begin ***
             else
             {
-                throw new NotImplementedException($"UIElement {xe.Name.ToString()} is not currently implemented on this renderer.");
-                //return null;
+                Debug.WriteLine($"[Renderer] UIElement {xe.Name.ToString()} is not currently implemented on this renderer.");
+                // Return a placeholder UI element to avoid crash
+                Border placeholder = new Border
+                {
+                    Background = new SolidColorBrush(Colors.Red),
+                    Child = new TextBlock { Text = $"Not implemented: {xe.Name}", Foreground = new SolidColorBrush(Colors.White) },
+                    Margin = new Thickness(4),
+                    CornerRadius = new CornerRadius(4)
+                };
+                return placeholder;
             }
 
         }//RenderObject end
