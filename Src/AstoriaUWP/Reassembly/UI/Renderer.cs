@@ -289,7 +289,7 @@ namespace DalvikUWPCSharp.Reassembly.UI
             }
             // *** experimental - begin ***
             else if (xeName.Equals("ShapeView") 
-                || xeName.Equals(/*"android.ticomware.interop.ShapeView"*/"com.example.shapeviewdemo.ShapeView"))
+                || xeName.Equals("com.example.shapeviewdemo.ShapeView"))
             {
                 Debug.WriteLine($"[Renderer] Creating ShapeView for element: {xe}");
                 ShapeView shapeView = new ShapeView(new AstoriaContext(), new AstoriaAttrSet(xe));
