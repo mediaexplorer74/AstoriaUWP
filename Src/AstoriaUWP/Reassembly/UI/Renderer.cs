@@ -272,7 +272,7 @@ namespace DalvikUWPCSharp.Reassembly.UI
                 }
                 return tv;
             }
-            else if (xeName.Equals("FrameLayout"))
+            else if (  /*xeName.Equals("FrameLayout")*/xeName.Contains("FrameLayout"))
             {
                
                 //Return Grid with objects inside
@@ -287,9 +287,77 @@ namespace DalvikUWPCSharp.Reassembly.UI
 
                 return container;
             }
+
             // *** experimental - begin ***
+            
+            else if (xeName.Equals("android.widget.FrameLayout1"))
+            {
+                Debug.WriteLine($"[Renderer] android.widget.FrameLayout for element: {xe}");
+                ShapeView shapeView = new ShapeView(new AstoriaContext(), new AstoriaAttrSet(xe));
+                try
+                {
+                    string primitive = xe.Attribute("primitive")?.Value?.ToLower() ?? "rectangle";
+                    Windows.UI.Color color = Windows.UI.Colors.White;
+                    if (xe.Attribute("color") != null)
+                    {
+                        color = ColorUtil.FromString(xe.Attribute("color").Value);
+                    }
+                    switch (primitive)
+                    {
+                        case "rectangle":
+                            {
+                                double width = xe.Attribute("width") != null ? double.Parse(xe.Attribute("width").Value) : 100;
+                                double height = xe.Attribute("height") != null ? double.Parse(xe.Attribute("height").Value) : 100;
+                                shapeView.DrawRectangle(width, height, color);
+                                break;
+                            }
+                        case "ellipse":
+                            {
+                                double width = xe.Attribute("width") != null ? double.Parse(xe.Attribute("width").Value) : 100;
+                                double height = xe.Attribute("height") != null ? double.Parse(xe.Attribute("height").Value) : 100;
+                                shapeView.DrawEllipse(width, height, color);
+                                break;
+                            }
+                        case "line":
+                            {
+                                double x1 = xe.Attribute("x1") != null ? double.Parse(xe.Attribute("x1").Value) : 0;
+                                double y1 = xe.Attribute("y1") != null ? double.Parse(xe.Attribute("y1").Value) : 0;
+                                double x2 = xe.Attribute("x2") != null ? double.Parse(xe.Attribute("x2").Value) : 100;
+                                double y2 = xe.Attribute("y2") != null ? double.Parse(xe.Attribute("y2").Value) : 100;
+                                double thickness = xe.Attribute("thickness") != null ? double.Parse(xe.Attribute("thickness").Value) : 2;
+                                shapeView.DrawLine(x1, y1, x2, y2, thickness, color);
+                                break;
+                            }
+                        case "point":
+                            {
+                                double x = xe.Attribute("x") != null ? double.Parse(xe.Attribute("x").Value) : 50;
+                                double y = xe.Attribute("y") != null ? double.Parse(xe.Attribute("y").Value) : 50;
+                                double diameter = xe.Attribute("diameter") != null ? double.Parse(xe.Attribute("diameter").Value) : 8;
+                                shapeView.DrawPoint(x, y, diameter, color);
+                                break;
+                            }
+                        default:
+                            Debug.WriteLine($"[Renderer] Unknown primitive type: {primitive}, defaulting to rectangle.");
+                            shapeView.DrawRectangle(100, 100, color);
+                            break;
+                    }
+                    if (xe.Attribute("background") != null)
+                    {
+                        Windows.UI.Color bgColor = ColorUtil.FromString(xe.Attribute("background").Value);
+                        shapeView.SetBackgroundColor(bgColor);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[Renderer] Error rendering ShapeView primitive: {ex.Message}");
+                }
+                return shapeView;
+            }
+
+
+
             else if (xeName.Equals("ShapeView") 
-                || xeName.Equals("com.example.shapeviewdemo.ShapeView"))
+                || xeName.Equals(/*"android.ticomware.interop.ShapeView"*/"com.example.shapeviewdemo.ShapeView"))
             {
                 Debug.WriteLine($"[Renderer] Creating ShapeView for element: {xe}");
                 ShapeView shapeView = new ShapeView(new AstoriaContext(), new AstoriaAttrSet(xe));

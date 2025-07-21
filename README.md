@@ -1,23 +1,35 @@
-# AstoriaUWP 0.0.10 - dev branch
+# AstoriaUWP 0.0.11-alpha -- dev branch
 
-Forked from: https://github.com/Ticomware/AstoriaUWP
+This is my fork based on Carl's [AstoriaUWP](https://github.com/cbialorucki/AstoriaUWP) solution. Note that if only _clone_ of original AstoriaUWP project. I am not pro in deep C# coding, so this solution iz _frozen_... But today/at now (in 2025) , I tried to do little Astoria "flashback"... :)
 
 ## Abstract
-"Project Astoria" remake (UWP)
+"Project Astoria" remake (UWP). A Dex.Net libraryMono/.NET library used to parse Android DEX files. Its main purpose is to support utilities for disassembling and presenting the contents of DEX files.
+
+Dex.net can display the output of a DEX file in multiple ways. It currently supports 2 languages (or writers in the source):
+
+1. Plain Dex
+
+This format follows the syntax in the Dalvik bytecode. The only exceptions are the switch and fill-array opcodes which use data tables. The data tables are parsed and displayed as part of the opcode.
+
+2. Dex
+
+This format provides a direct translation of the 'plain dex' opcodes into a more readable format. It also resolves references to strings, methods, classes, fields. It maintains a 1-1 mapping with standard opcodes.
+
+An example of how this language would format an opcode: 'aput v0, v1, v2' is displayed as 'v1[v2] = v0'.
 
 ## Screenshots
 <p align="center">
   <img src="Images/sshot01.png">
   <img src="Images/sshot02.png">
   <img src="Images/sshot03.png">
+  <img src="Images/sshot04.png">
 </p>
 
 ## My actions (my 2 cents) 
 - Some WIKI data added. 
 - Quick R.E. (only some try...catch added to avoid accident app halts... and nothing more)
-- Experimental DEX 7 format added 
-- Some Graphics Rrimitives Rendering improved.. i hope =)
-
+- DEX 7 detected (see Images/uc83.apk sample that can't de-dexed).
+- Some code fixes (I've updated the extraction logic in `DroidApp.cs` so that before extracting the APK, the extraction directory   localAppRoot is fully cleaned by deleting all files and subdirectories. This prevents IOException errors caused by existing files or folders, ensuring that all APK contents, including resources.arsc , are extracted correctly. Please try installing the APK and starting the EmuPage again to confirm that the resource file is now present and the crash is resolved.)
 
 ## Description
 "Astoria for Universal Windows Platform" (AstoriaUWP) is an APK interpreter for the Universal Windows Platform. 
@@ -32,29 +44,57 @@ It exists for demonstration and educational purposes. Feel free to fork this pro
 - Windows SDK 19041 + 15063 installed (for W10M compatibility).
 - x64 and ARM targets used
 
+## What's new?
+
+### DEX 7 Detection and Parsing Support Added
+I've implemented support for DEX 7 format detection and parsing in your AstoriaUWP Android simulator project. Here's changes what I've done:
+
+1. Updated DexHeader.cs
+
+- Added support for DEX version 7 (037) and other versions
+- Added logging to display the detected DEX version
+- Modified the header parsing to be more flexible with different DEX versions
+
+2. Updated DexParser.cs
+
+- Fixed the version parsing to correctly extract the version number from the magic string
+- Added support for DEX versions 035, 037 (DEX 7), 038, 039, etc.
+- Added documentation about which Android versions use which DEX versions:
+  - Version 035 is used in Android 5.0+
+  - Version 037 is used in Android 7.0+
+  - Version 038 is used in Android 8.0+
+  - Version 039 is used in Android 9.0+
+- Added logging to display the detected DEX version
+
+### How It Works
+The DEX file format starts with a magic string "dex\n" followed by a version number (e.g., "037\0" for DEX 7). The code now correctly parses this version number and allows processing of DEX 7 files without throwing version-related exceptions.
+
+The changes maintain backward compatibility with older DEX versions while adding support for newer ones, including DEX 7 and beyond.
+
+## Testing
+You can test this implementation with DEX 7 files from Android 7.0+ applications. The code will now detect and log the DEX version during parsing, which should help with debugging.
+
+Enjoy your Android simulator for old Nokia phones with Windows 10 Mobile OS!
 
 ## Test scenario
-- Place Images/helloworld1.apk at Pictures folder at your PC/WinPhone
-
-- Run AstoriaUWP, and click "Pick folder&file (experimental)". Then find and choose helloworld1.apk and try to open this apk file.
+- Move helloworld1.apk, testdpc7 or uc83.apk to Pictures folder at your PC/WinPhone
+- Run AstoriaUWP, and click "Pick folder&file (experimental)". Then find and choose some apk and try to open this apk file.
 - After loading phase, click "Install app" button.
 - After installing phase, click "Apps list" button.
 - Go to App Storage, find Layout folder.
-- Try to run Emulator by tapping on "Hello world" item at apps list
-
-In result, the phrase "Layout not found" must be appeared on Emu screen... or, maybe, "testbox" on right bottom corner :)
-
+- Try to run Emulator by tapping on "Hello world" item. You must see blue-colored empty view ("layout imitation" at now, not real layout).
+- Try to run Emulator by tapping on "testdpc7" item. You must see some simple graphic primitive ("Easter Eggs" item parsing not ready).
+- Try to run Emulator by tapping on "uc83" item. You must see blue-colored empty view ("Ungoogled Chromium" bad imitaion, hehe!)))) 
 
 ## Project status
-- Intro/RnD +- 13/100
+- Intro/RnD +- 14/100
 - Design +- 3/100 
-- Tech. project +- 21/100
-- Dev. project  +- 3/100
-- Tests/Intro   +- 4/100
+- Tech. project +- 22/100
+- Dev. project  +- 4/100
+- Tests/Intro   +- 5/100
 
 
-## References
-My fork based on Ticomware's (AstoriaUWP)[https://github.com/Ticomware/AstoriaUWP] solution.
+## Explore more resources for your own dev journey
 
 AstoriaUWP also used some code from the following projects:
 - https://source.android.com/                 Android Open Source Project
@@ -66,14 +106,15 @@ AstoriaUWP also used some code from the following projects:
 There's still a TON of things missing from this proof-of-concept (MVP) and areas of improvement. Help wanted. 
 Feel free to PR your improvements for this experimental soft!
 
-## References / License
-- (Ticomware)[https://github.com/Ticomware/]
-- Apache License
+## References
+- https://github.com/cbialorucki/AstoriaUWP Original AstoriaUWP project 
+- https://github.com/cbialorucki Carl J. Bialorucki, C# developer, author/creator of AstoriaUWP
+
+## .. 
+
+- AstoriaUWP is RnD project only. AS-IS. No support. Distributed under the MIT License.
 
 ## .
-With best wishes,
+- [M][E] Jul,21 2025
 
-  [m][e] 2022--2023
-
-AstoriaUWP is RnD project only. AS-IS. No support. Distributed under the MIT License.
 

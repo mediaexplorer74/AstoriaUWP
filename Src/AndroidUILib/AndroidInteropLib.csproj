@@ -129,6 +129,8 @@
     <Compile Include="android\text\Spanned.cs" />
     <Compile Include="android\text\SpanWatcher.cs" />
     <Compile Include="android\util\SparseArray.cs" />
+    <Compile Include="android\view\Layout.cs" />
+    <Compile Include="android\view\ViewA.cs" />
     <Compile Include="android\widget\RelativeLayout.cs" />
     <Compile Include="android\support\v4\Pools.cs" />
     <Compile Include="android\util\AttributeSet.cs" />

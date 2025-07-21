@@ -3,6 +3,7 @@ using DalvikUWPCSharp.Applet;
 using DalvikUWPCSharp.Disassembly.APKReader;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -52,8 +53,10 @@ namespace DalvikUWPCSharp.Reassembly
             }
             catch (Exception ex1)
             {
-                var dialog = new MessageDialog($"Exception : res layout folder not found =( \n\n{ex1.Message}");
-                await dialog.ShowAsync();
+                //var dialog = new MessageDialog($"Exception : res layout folder not found =( \n\n{ex1.Message}");
+                //await dialog.ShowAsync();
+                Debug.WriteLine("[ERROR] "+ currentApp.resFolder.Path + "\\layout" +
+                   " (res layout folder) not found! Error message :" + ex1.Message);
                 return;
             }
 

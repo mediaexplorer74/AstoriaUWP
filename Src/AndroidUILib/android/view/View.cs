@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Media;
 
 namespace AndroidInteropLib.android.view
 {
-    public abstract class View
+    public /*abstract*/ class View
     {
         private int id;
         public Context mContext { get; private set; }
@@ -100,7 +100,9 @@ namespace AndroidInteropLib.android.view
                 return null;
         }
 
-        public abstract void CreateWinUI(params object[] obj);
+        public virtual void CreateWinUI(params object[] obj) 
+        {
+        }
 
         public static implicit operator ContentControl(View v)
         {

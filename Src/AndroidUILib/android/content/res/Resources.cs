@@ -68,11 +68,41 @@ namespace AndroidInteropLib.android.content.res
             throw new Exception("Must be overriden.");
         }
 
-        internal string getResourceName(int resource)
+        /*internal string getResourceName(int resource)
         {
             //throw new Exception("Must be overriden.");
-            return getResourceName(int.Parse(resource.ToString(), System.Globalization.NumberStyles.HexNumber));
-            //return getResourceName(int.Parse(hexString, 16));
+
+            string result = "";
+            //try
+            //{
+            //    result = int.Parse(resource.ToString(), System.Globalization.NumberStyles.HexNumber).ToString("X");
+            //        //getResourceName(int.Parse(resource.ToString(), System.Globalization.NumberStyles.HexNumber));
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("[ex] Resources - getResourceName ex.: " + ex.Message);
+            //}            
+            
+            int r = int.Parse(/ * hexString * /   resource.ToString(), System.Globalization.NumberStyles.HexNumber);
+            result = r.ToString();
+            return result;
+        }*/
+
+        internal string getResourceName(int resource)
+        {
+            string value = resource.ToString();
+            try
+            {
+                if (value == null || value.Length == 0)
+                    return "defaultvalue";
+                Int32 r = Int32.Parse(value, System.Globalization.NumberStyles.HexNumber);
+                return r.ToString();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[ex] Resources - getResourceName ( " + resource + ") error: " + ex.Message);
+                return "defaultvalue";
+            }
         }
 
         /*public class Theme
