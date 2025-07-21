@@ -3,6 +3,7 @@ using DalvikUWPCSharp.Applet;
 using DalvikUWPCSharp.Classes;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -38,45 +39,51 @@ namespace DalvikUWPCSharp
             this.Loaded += MainPage_Loaded;
         }
 
+        public class AppGridItem
+        {
+            public string Label { get; set; }
+            public string Icon { get; set; } // Path to icon image
+            public string FolderName { get; set; }
+        }
+
+        public ObservableCollection<AppGridItem> AppGridItems { get; set; } = new ObservableCollection<AppGridItem>();
+
         private async void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             SetTitleBarColor();
-
-            // Load and render the new ShapeView primitives demo layout
-            /*try
-            {
-                var layoutFile = await StorageFile.GetFileFromApplicationUriAsync(
-                      new Uri("ms-appx:///Assets/SampleLayouts/shapeview_primitives_demo.xml"));
-                var renderer = new DalvikUWPCSharp.Reassembly.UI.Renderer(null);
-                var layoutElement = await renderer.RenderXmlFile(layoutFile);
-                if (layoutElement != null)
-                {
-                    bgGrid.Children.Add(layoutElement);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Failed to load shapeview_primitives_demo.xml: {ex.Message}");
-            }*/
-
+            AppGridItems.Clear();
             var appsRoot = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Apps", CreationCollisionOption.OpenIfExists);
             foreach (StorageFolder sf in await appsRoot.GetFoldersAsync())
             {
-                AppListBox.Items.Add(sf.Name);
+                string label = sf.Name;
+                string iconPath = null;
+                try
+                {
+                    // Чтение appinfo.json для получения настоящего имени приложения
+                    var metaFile = await sf.TryGetItemAsync("appinfo.json");
+                    if (metaFile != null)
+                    {
+                        string json = await FileIO.ReadTextAsync((StorageFile)metaFile);
+                        dynamic meta = Newtonsoft.Json.JsonConvert.DeserializeObject(json);
+                        if (meta.label != null)
+                            label = meta.label;
+                    }
+                    // Приоритет: app_image.png -> icon.png -> стандартная иконка
+                    var appImageFile = await sf.TryGetItemAsync("app_image.png");
+                    if (appImageFile != null)
+                        iconPath = ((StorageFile)appImageFile).Path;
+                    else
+                    {
+                        var iconFile = await sf.TryGetItemAsync("icon.png");
+                        if (iconFile != null)
+                            iconPath = ((StorageFile)iconFile).Path;
+                        else
+                            iconPath = "Assets/Square150x150Logo.png";
+                    }
+                }
+                catch { iconPath = "Assets/Square150x150Logo.png"; }
+                AppGridItems.Add(new AppGridItem { Label = label, Icon = iconPath, FolderName = sf.Name });
             }
-
-
-            //DalvikCPU MainCPU = new DalvikCPU();
-            //MainCPU.Code = Util.GetSampleCode();
-            //MainCPU.RunVM();
-
-            // ************Experimental ***********
-            //DalvikCPU MainCPU = new DalvikCPU();
-            //MainCPU.Code = Util.GetSampleCode();
-            //MainCPU.RunVM();
-            // ************************************
-
-
         }
 
         public void SetTitleBarColor()
@@ -255,6 +262,48 @@ namespace DalvikUWPCSharp
 
         }//purgeButton_Click end
 
+        private void AppGridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // No-op: use ItemClick for navigation
+        }
+
+        private async void AppGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            var item = e.ClickedItem as AppGridItem;
+            if (item == null) return;
+            if (item.Label == "Settings")
+            {
+                Frame.Navigate(typeof(SettingsPage));
+                return;
+            }
+            if (string.IsNullOrEmpty(item.FolderName)) return;
+            bgGrid.Children.Add(new DroidAppLoadingPopup());
+            var appsRoot = await ApplicationData.Current.LocalFolder.CreateFolderAsync("Apps", CreationCollisionOption.OpenIfExists);
+            DroidApp da = null;
+            try
+            {
+                da = await DroidApp.CreateAsync(await appsRoot.GetFolderAsync(item.FolderName));
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("DroidApp.CreateAsync - Exception: " + ex.Message);
+                ContentDialog msgDialog = new ContentDialog()
+                {
+                    Title = "DroidApp.CreateAsync - Exception",
+                    Content = ex.Message,
+                    PrimaryButtonText = "OK"
+                };
+                ContentDialogResult result = await msgDialog.ShowAsync();
+                Frame.Navigate(typeof(MainPage));
+                return;
+            }
+            da.Run(Frame);
+        }
         
+
+        private void settingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(SettingsPage));
+        }
     }
 }

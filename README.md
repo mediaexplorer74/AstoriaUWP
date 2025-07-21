@@ -1,4 +1,4 @@
-# AstoriaUWP 0.0.11-alpha -- dev branch
+# AstoriaUWP 0.0.12-alpha -- dev branch
 
 This is my fork based on Carl's [AstoriaUWP](https://github.com/cbialorucki/AstoriaUWP) solution. Note that if only _clone_ of original AstoriaUWP project. I am not pro in deep C# coding, so this solution is _frozen_... But today/at now (in 2025) , I still tried to do liiitttttlllleeee ProjectAstoria-inspired "flashback"... :)
 
@@ -11,29 +11,20 @@ It exists for demonstration and educational purposes. Feel free to fork this pro
 
 
 ## Abstract
-This is some "Project Astoria" "re-think"/ "alternative". A Dex.Net libraryMono/.NET library used to parse Android DEX files. Its main purpose is to support utilities for disassembling and presenting the contents of DEX files.
+This is some "Project Astoria" "re-think"/ "alternative". 
 
-Dex.net can display the output of a DEX file in multiple ways. It currently supports 2 languages (or writers in the source):
+### Philosophy: Why "AstoriaUWP" and Parallels with Microsoft Project Astoria
+- Name Origin: The name "AstoriaUWP" is a clear homage to Microsoft's Project Astoria, which was an official Microsoft bridge project to run Android apps on Windows 10 Mobile (UWP platform). This project aims to achieve a similar goal: running Android APKs on Windows (UWP), hence the name. So, parallels:
+  - Both projects attempt to bridge Android and Windows app ecosystems.
+  - Both involve emulating or translating Android APIs/resources for the Windows platform.
+  - Both face(d) significant technical challenges in compatibility, resource mapping, and UI rendering.
+  - Project Astoria was discontinued by Microsoft, but this project continues the spirit of experimentation and cross-platform integration...
 
-1. Plain Dex
+## Screenshot(s)
+![Install APK Mode](Images/sshot01.png)
+![App List Mode](Images/sshot02.png)
 
-This format follows the syntax in the Dalvik bytecode. The only exceptions are the switch and fill-array opcodes which use data tables. The data tables are parsed and displayed as part of the opcode.
-
-2. Dex
-
-This format provides a direct translation of the 'plain dex' opcodes into a more readable format. It also resolves references to strings, methods, classes, fields. It maintains a 1-1 mapping with standard opcodes.
-
-An example of how this language would format an opcode: 'aput v0, v1, v2' is displayed as 'v1[v2] = v0'.
-
-## Screenshots
-<p align="center">
-  <img src="Images/sshot01.png">
-  <img src="Images/sshot02.png">
-  <img src="Images/sshot03.png">
-  <img src="Images/sshot04.png">
-</p>
-
-## My actions (my 2 cents) 
+## My "2 cents" 
 - Some WIKI data added. 
 - Quick R.E. (only some try...catch added to avoid accident app halts... and nothing more)
 - DEX 7 detected (see Images/uc83.apk sample that can't de-dexed).
@@ -44,37 +35,44 @@ An example of how this language would format an opcode: 'aput v0, v1, v2' is dis
 - Windows SDK 19041 + 15063 installed (for W10M compatibility).
 - x64 and ARM targets used
 
-## What's new?
+### Solution Structure and Module Overview 
 
-### DEX 7 Detection and Parsing Support Added
-I've implemented support for DEX 7 format detection and parsing in your AstoriaUWP Android simulator project. Here's changes what I've done:
+1. AstoriaUWP (Main UWP Application)
+- Purpose: The core application, providing the main UI, APK installation, emulation, and integration logic. Contains Applet (APK handling), Reassembly (Android resource/UI emulation), and other app-specific logic.
+- Status: Many features are marked as MVP/proof-of-concept. The README and code comments indicate a lot of experimental and incomplete areas, especially in emulation, resource handling, and UI rendering. Some classes (e.g., AstoriaXmlParser , AstoriaAttrSet , AstoriaWindow ) previously threw NotImplementedException and still have stubbed or placeholder logic. 
 
-1. Updated DexHeader.cs
+2. AndroidUILib
+- Purpose: Provides .NET/C# implementations of Android Java classes, namespaces, and UI components (e.g., android.view , android.widget ). Acts as an interop layer to mimic Android's class structure and behavior for the emulator.
+- Status: Many classes are present, but a significant portion are likely stubs or partial implementations. Some files (like CloneNotSupportedException.cs ) are just basic class shells. The structure is broad but depth is limited in many areas. 
 
-- Added support for DEX version 7 (037) and other versions
-- Added logging to display the detected DEX version
-- Modified the header parsing to be more flexible with different DEX versions
+3. AndroidXml
+- Purpose: Handles parsing and manipulation of Android XML resources (layouts, manifests, etc.). Includes readers, writers, and utilities for binary and text XML formats.
+- Status: Appears functional for basic XML parsing, but advanced features or full compatibility with all Android XML nuances may be incomplete. Some files may be placeholders or have TODOs. 
 
-2. Updated DexParser.cs
+4. DEX
+- Purpose: Implements Dalvik/DEX bytecode parsing, disassembly, and related utilities. Contains classes for DEX headers, instructions, fields, methods, and disassembly logic.
+- Status: Core parsing and disassembly logic is present, but advanced features (e.g., full method emulation, all opcodes, or integration with the emulator) may be incomplete or experimental.
+### Incomplete/Experimental Areas
+- General: The README and codebase both emphasize the MVP/experimental nature. Many modules are partial, with stubbed methods, TODOs, or comments indicating missing features.
+- UI Emulation: The Reassembly/UI folder and related classes (e.g., Renderer.cs ) have placeholder logic for unsupported elements.
+- Resource Handling: Some resource parsing and mapping logic is incomplete or only partially implemented.
+- Exception Handling: Many places previously threw NotImplementedException or had empty catch blocks; some have been replaced with logging and fallbacks, but true implementations are still needed.
 
-- Fixed the version parsing to correctly extract the version number from the magic string
-- Added support for DEX versions 035, 037 (DEX 7), 038, 039, etc.
-- Added documentation about which Android versions use which DEX versions:
-  - Version 035 is used in Android 5.0+
-  - Version 037 is used in Android 7.0+
-  - Version 038 is used in Android 8.0+
-  - Version 039 is used in Android 9.0+
-- Added logging to display the detected DEX version
+### Summary Table
+Module     | Purpose  | Status/Notes 
 
-### How It Works
-The DEX file format starts with a magic string "dex\n" followed by a version number (e.g., "037\0" for DEX 7). The code now correctly parses this version number and allows processing of DEX 7 files without throwing version-related exceptions.
+AstoriaUWP | Main app, APK install/emulation, UI | MVP, many stubs/experimental areas 
 
-The changes maintain backward compatibility with older DEX versions while adding support for newer ones, including DEX 7 and beyond.
+AndroidUILib | Android class/UI emulation in .NET | Broad, many stubs/partial impl. 
 
-## Testing
-You can test this implementation with DEX 7 files from Android 7.0+ applications. The code will now detect and log the DEX version during parsing, which should help with debugging.
+AndroidXml | Android XML parsing/writing | Functional, but not fully complete 
 
-Enjoy your Android simulator for old Nokia phones with Windows 10 Mobile OS!
+DEX | Dalvik/DEX parsing/disassembly | Core present, advanced incomplete
+
+
+## Status
+- Proto. So, atnaw you can onlytest this implementation with DEX 7 files from Android 7.0+ applications. The code will now detect and log the DEX version during parsing, which should help with debugging. This in not user-friendly thing. Devs only.
+
 
 ## Test scenario
 - Move helloworld1.apk, testdpc7 or uc83.apk to Pictures folder at your PC/WinPhone

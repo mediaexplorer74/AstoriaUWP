@@ -1,4 +1,4 @@
-﻿<Page
+<Page
     x:Class="DalvikUWPCSharp.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,10 +12,23 @@
         
         <!--Button x:Name="button" Content="Purge apps folder" Margin="52,0,0,28" VerticalAlignment="Bottom" Click="button_Click"/-->
         
-        <ListBox x:Name="AppListBox" Margin="0,43,0,65" SelectionChanged="AppListBox_SelectionChanged">
-            <ListBoxItem Content="Settings"/>
-            <ListBoxItem Content="Load and install testdpc7.apk"/>
-        </ListBox>
+        <GridView x:Name="AppGridView" Margin="0,40,0,24" SelectionChanged="AppGridView_SelectionChanged" IsItemClickEnabled="True" 
+                  ItemClick="AppGridView_ItemClick" ItemsSource="{x:Bind AppGridItems}">
+            <GridView.ItemTemplate>
+                <!--DataTemplate x:DataType="local:AppGridItem">
+                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="8">
+                        <Image Source="{Binding Icon}" Width="64" Height="64" Stretch="UniformToFill"/>
+                        <TextBlock Text="{Binding Label}" TextAlignment="Center" FontWeight="SemiBold" FontSize="14"/>
+                    </StackPanel>
+                </DataTemplate-->
+                <DataTemplate>
+                  <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0,0,0,0">
+                    <Image Source="{Binding Icon}" Width="128" Height="128" Stretch="UniformToFill"/>
+                    <TextBlock Text="{Binding Label}" TextAlignment="Center" FontSize="10" TextWrapping="NoWrap"/>
+                </StackPanel>
+            </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
         <!--<ScrollViewer FontFamily="Segoe UI Symbol"/>-->
     </Grid>
 
@@ -23,6 +36,7 @@
         <CommandBar>
             <AppBarButton x:Name="chooseFileButton" Label="File Picker (Experimental)" Icon="OpenFile" Click="chooseFileButton_Click" />
             <AppBarButton x:Name="purgeButton" Label="Purge apps folder" Icon="Admin" Click="purgeButton_Click" />
+            <AppBarButton x:Name="settingsButton" Label="Settings" Icon="Setting" Click="settingsButton_Click" />
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

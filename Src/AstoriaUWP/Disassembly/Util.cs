@@ -143,7 +143,14 @@ namespace DalvikUWPCSharp.Disassembly
             // Create Folder : "Apps"
             var appsRoot = await localFolder.CreateFolderAsync("Apps", CreationCollisionOption.OpenIfExists);
 
-            await appsRoot.DeleteAsync();
+            try
+            {
+                await appsRoot.DeleteAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[ex] Util - PurgeAppsFolder - Delete files error: " + ex.Message);
+            }
 
             var dialog = new MessageDialog("Apps folder " + appsRoot  +  " purged.");
 

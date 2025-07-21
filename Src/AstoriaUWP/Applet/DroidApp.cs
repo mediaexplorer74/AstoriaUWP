@@ -238,6 +238,59 @@ namespace DalvikUWPCSharp.Applet
 
                 appIcon = GetAppIcon();
 
+                // Сохраняем метаданные приложения в appinfo.json
+                try
+                {
+                    var meta = new {
+                        label = appinfo.label,
+                        packageName = appinfo.packageName,
+                        versionName = appinfo.versionName,
+                        icon = appinfo.iconFileName != null && appinfo.iconFileName.Count > 0 ? appinfo.iconFileName[0] : null
+                    };
+                    string json = Newtonsoft.Json.JsonConvert.SerializeObject(meta);
+                    StorageFile metaFile = await localAppRoot.CreateFileAsync("appinfo.json", CreationCollisionOption.ReplaceExisting);
+                    await FileIO.WriteTextAsync(metaFile, json);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("[WARN] Failed to write appinfo.json: " + ex.Message);
+                }
+
+                // Копируем иконку приложения как app_image.png
+                try
+                {
+                    if (appinfo.iconFileName != null && appinfo.iconFileName.Count > 0)
+                    {
+                        string iconPath = appinfo.iconFileName[0];
+                        StorageFile iconFile = null;
+                        try
+                        {
+                            iconFile = await localAppRoot.GetFileAsync(iconPath);
+                        }
+                        catch
+                        {
+                            // Попробуем найти в подпапках, если прямой путь не сработал
+                            var files = await localAppRoot.GetFilesAsync();
+                            foreach (var file in files)
+                            {
+                                if (file.Name.ToLower().Contains("icon"))
+                                {
+                                    iconFile = file;
+                                    break;
+                                }
+                            }
+                        }
+                        if (iconFile != null)
+                        {
+                            await iconFile.CopyAsync(localAppRoot, "app_image.png", NameCollisionOption.ReplaceExisting);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("[WARN] Failed to copy app icon as app_image.png: " + ex.Message);
+                }
+
                 // ! RnD !
                 //InvokeLoadEvent();
                 //DroidApp.InvokeDiagEvent();

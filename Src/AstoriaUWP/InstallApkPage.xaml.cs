@@ -1,4 +1,4 @@
-﻿// InstallApkPage
+// InstallApkPage
 
 using System;
 using System.Collections.Generic;
@@ -79,49 +79,50 @@ namespace DalvikUWPCSharp
             displayTitle.Text = s;
         }//SetDisplayName
 
+        // SetAppMetadata
+        public void SetAppMetadata(DalvikUWPCSharp.Disassembly.APKReader.ApkInfo info)
+        {
+            appLabelText.Text = $"App Name: {info.label}";
+            packageNameText.Text = $"Package: {info.packageName}";
+            versionText.Text = $"Version: {info.versionName} (Code: {info.versionCode})";
+            if (info.Permissions != null && info.Permissions.Count > 0)
+                permissionsText.Text = $"Permissions: {string.Join(", ", info.Permissions)}";
+            else
+                permissionsText.Text = "Permissions: None";
+        }
 
         // async
         //   appletLoaded        
         public void appletLoaded(object sender, EventArgs e)
         {
-
             installProgbar.Visibility = Visibility.Collapsed;
-
             installBarChrome.Visibility = Visibility.Visible;
-
-            //displayTitle.Text = Disassembly.Util.CurrentApp.metadata.label;
-            //AddDebugMessage("Icon Path: " + Disassembly.Util.CurrentApp.metadata.iconFileName[0]);
-
-            /*
-            try
-            {
-                app_image.Source = Disassembly.Util.CurrentApp.appIcon;
-            }
-            catch (Exception ex1)
-            {
-                //var dialog = new MessageDialog($"Disassembly.Util.CurrentApp object is null!  \n\n{ex1.Message}");
-                //await 
-                //    dialog.ShowAsync();
-
-                // return;
-                Debug.WriteLine($"Exception: Disassembly.Util.CurrentApp object is null!  \n\n{ex1.Message}");
-            }
-            */
-
             AddDebugMessage("Page loaded.");
-
-            // RnD
-            // Permissions cycle
-            //foreach (string s in Disassembly.Util.CurrentApp.metadata.Permissions)
-            //{
-            //    Debug.WriteLine(s);
-            //
-            //    AddDebugMessage(s);
-            //}
-
             // Show Install button
             install_Button.Visibility = Visibility.Visible;
+            // Set app metadata UI
+            if (Disassembly.Util.CurrentApp != null && Disassembly.Util.CurrentApp.metadata != null)
+                SetAppMetadata(Disassembly.Util.CurrentApp.metadata);
 
+            // Показать иконку приложения, если она есть
+            try
+            {
+                var appRoot = Disassembly.Util.CurrentApp.localAppRoot;
+                var imageFileTask = appRoot.GetFileAsync("app_image.png");
+                imageFileTask.AsTask().ContinueWith(t =>
+                {
+                    if (t.Status == TaskStatus.RanToCompletion)
+                    {
+                        var file = t.Result;
+                        var uri = new Uri(file.Path);
+                        Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                        {
+                            app_image.Source = new BitmapImage(uri);
+                        });
+                    }
+                });
+            }
+            catch { }
         }//appletLoaded
 
         // ******************************************************************            
