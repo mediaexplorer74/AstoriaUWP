@@ -131,6 +131,10 @@
     <Compile Include="android\util\SparseArray.cs" />
     <Compile Include="android\view\Layout.cs" />
     <Compile Include="android\view\ViewA.cs" />
+    <Compile Include="android\widget\Button.cs" />
+    <Compile Include="android\widget\FrameLayout.cs" />
+    <Compile Include="android\widget\LinearLayout.cs" />
+    <Compile Include="android\widget\ListView.cs" />
     <Compile Include="android\widget\RelativeLayout.cs" />
     <Compile Include="android\support\v4\Pools.cs" />
     <Compile Include="android\util\AttributeSet.cs" />
@@ -153,6 +157,7 @@
     <Compile Include="android\view\ViewGroup.cs" />
     <Compile Include="android\view\Window.cs" />
     <Compile Include="android\view\WindowManager.cs" />
+    <Compile Include="android\widget\ScrollView.cs" />
     <Compile Include="android\widget\TextView.cs" />
     <Compile Include="com\android\_internal\app\ToolbarActionBar.cs" />
     <Compile Include="com\android\_internal\R.cs" />

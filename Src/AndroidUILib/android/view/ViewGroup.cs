@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Contacts;
 
 namespace AndroidInteropLib.android.view
 {
@@ -133,6 +134,15 @@ namespace AndroidInteropLib.android.view
 
 
 
+            public virtual void addView(object child)
+            {
+                
+            }
+
+            public virtual void removeView(object child)
+            {
+               
+            }
 
 
         }

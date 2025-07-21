@@ -1,4 +1,6 @@
-# AstoriaUWP 0.0.12-alpha -- dev branch
+# AstoriaUWP 0.0.13-alpha -- dev branch
+
+![](Images/logo.png)
 
 This is my fork based on Carl's [AstoriaUWP](https://github.com/cbialorucki/AstoriaUWP) solution. Note that if only _clone_ of original AstoriaUWP project. I am not pro in deep C# coding, so this solution is _frozen_... But today/at now (in 2025) , I still tried to do liiitttttlllleeee ProjectAstoria-inspired "flashback"... :)
 
@@ -21,14 +23,14 @@ This is some "Project Astoria" "re-think"/ "alternative".
   - Project Astoria was discontinued by Microsoft, but this project continues the spirit of experimentation and cross-platform integration...
 
 ## Screenshot(s)
-![Install APK Mode](Images/sshot01.png)
-![App List Mode](Images/sshot02.png)
+![Layout Render. Error](Images/sshot01.png)
 
 ## My "2 cents" 
 - Some WIKI data added. 
 - Quick R.E. (only some try...catch added to avoid accident app halts... and nothing more)
 - DEX 7 detected (see Images/uc83.apk sample that can't de-dexed).
 - Some code fixes (I've updated the extraction logic in `DroidApp.cs` so that before extracting the APK, the extraction directory   localAppRoot is fully cleaned by deleting all files and subdirectories. This prevents IOException errors caused by existing files or folders, ensuring that all APK contents, including resources.arsc , are extracted correctly. Please try installing the APK and starting the EmuPage again to confirm that the resource file is now present and the crash is resolved.)
+- Adding base Android elements (FrameLayout, Button, etc.) initiated.
 
 ## Coding "workbench"
 - Visual Studio 2022 (But VS 2017 compatibility remained, for Live WinPhone debugging, heh!)
@@ -115,4 +117,4 @@ Feel free to PR your improvements for this experimental soft!
 ## .
 - [M][E] Jul,21 2025
 
-
+![](Images/footer.png)

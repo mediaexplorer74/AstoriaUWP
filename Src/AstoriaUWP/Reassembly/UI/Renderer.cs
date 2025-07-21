@@ -233,21 +233,69 @@ namespace DalvikUWPCSharp.Reassembly.UI
             }
             else if (xeName.Equals("RelativeLayout"))
             {
-                Grid container = new Grid();
-                if (xe.Attribute(p1nspace + "layout_width") != null)
-                    container.Width = double.TryParse(xe.Attribute(p1nspace + "layout_width").Value, out var w) ? w : container.Width;
-                if (xe.Attribute(p1nspace + "layout_height") != null)
-                    container.Height = double.TryParse(xe.Attribute(p1nspace + "layout_height").Value, out var h) ? h : container.Height;
-                if (xe.Attribute(p1nspace + "background") != null)
-                    container.Background = new SolidColorBrush(ColorUtil.FromString(xe.Attribute(p1nspace + "background").Value));
+                var container = new AndroidInteropLib.android.widget.RelativeLayout(null, null);
+                container.CreateWinUI();
                 if (nestedObjs)
                 {
                     foreach (XElement xe1 in xe.Elements())
                     {
-                        container.Children.Add(await RenderObject(xe1));
+                        var child = await RenderObject(xe1);
+                        
+                        //if (child is UIElement uiChild)
+                        //    container.addView(uiChild);
+                        /*if (child is UIElement uiChild)
+                        {
+                            var view = new AndroidInteropLib.android.view.View(null, null);
+                            view.WinUI = (ContentControl)uiChild;
+                            container.addView(view);
+                        }*/
                     }
                 }
-                return container;
+                return container.WinUI;
+            }
+            else if (xeName.Equals("LinearLayout"))
+            {
+                var container = new AndroidInteropLib.android.widget.LinearLayout(null, null);
+                container.CreateWinUI();
+                if (nestedObjs)
+                {
+                    foreach (XElement xe1 in xe.Elements())
+                    {
+                        var child = await RenderObject(xe1);
+
+                        /*if (child is UIElement uiChild)
+                            container.addView(uiChild);*/
+                        if (child is UIElement uiChild)
+                        {
+                            //var view = new AndroidInteropLib.android.view.View(null, null);
+                            //view.WinUI = (ContentControl)uiChild;
+                            //container.addView(view);
+                        }
+                    }
+                }
+                return container.WinUI;
+            }
+            else if (xeName.Equals("FrameLayout"))
+            {
+                var container = new AndroidInteropLib.android.widget.FrameLayout(null, null);
+                container.CreateWinUI();
+                if (nestedObjs)
+                {
+                    foreach (XElement xe1 in xe.Elements())
+                    {
+                        var child = await RenderObject(xe1);
+
+                        //if (child is UIElement uiChild)
+                        //    container.addView(uiChild);
+                        if (child is UIElement uiChild)
+                        {
+                            //var view = new AndroidInteropLib.android.view.View(null, null);
+                            //view.WinUI = (ContentControl)uiChild;
+                            //container.addView(view);
+                        }
+                    }
+                }
+                return container.WinUI;
             }
             else if (xeName.Equals("TextView"))
             {
@@ -419,6 +467,44 @@ namespace DalvikUWPCSharp.Reassembly.UI
                     Debug.WriteLine($"[Renderer] Error rendering ShapeView primitive: {ex.Message}");
                 }
                 return shapeView;
+            }
+            // *** experimental - begin ***
+            else if (xeName.Equals("LinearLayout"))
+            {
+                StackPanel panel = new StackPanel();
+                string orientation = xe.Attribute(p1nspace + "orientation")?.Value?.ToLower() ?? "vertical";
+                panel.Orientation = orientation == "horizontal" ? Orientation.Horizontal : Orientation.Vertical;
+                if (xe.Attribute(p1nspace + "layout_width") != null && double.TryParse(xe.Attribute(p1nspace + "layout_width").Value, out var w))
+                    panel.Width = w;
+                if (xe.Attribute(p1nspace + "layout_height") != null && double.TryParse(xe.Attribute(p1nspace + "layout_height").Value, out var h))
+                    panel.Height = h;
+                if (xe.Attribute(p1nspace + "background") != null)
+                    panel.Background = new SolidColorBrush(ColorUtil.FromString(xe.Attribute(p1nspace + "background").Value));
+                if (nestedObjs)
+                {
+                    foreach (XElement xe1 in xe.Elements())
+                    {
+                        panel.Children.Add(await RenderObject(xe1));
+                    }
+                }
+                return panel;
+            }
+            else if (xeName.Equals("ImageView"))
+            {
+                Image img = new Image();
+                if (xe.Attribute(p1nspace + "src") != null)
+                {
+                    string src = xe.Attribute(p1nspace + "src").Value;
+                    // TODO: resolve resource reference (e.g., @drawable/...) to actual file path
+                    // For now, just set placeholder
+                    img.Source = new Windows.UI.Xaml.Media.Imaging.BitmapImage(new Uri("ms-appx:///Assets/Square150x150Logo.png"));
+                }
+                img.Margin = new Thickness(4);
+                if (xe.Attribute(p1nspace + "layout_width") != null && double.TryParse(xe.Attribute(p1nspace + "layout_width").Value, out var w))
+                    img.Width = w;
+                if (xe.Attribute(p1nspace + "layout_height") != null && double.TryParse(xe.Attribute(p1nspace + "layout_height").Value, out var h))
+                    img.Height = h;
+                return img;
             }
             // *** experimental - begin ***
             else

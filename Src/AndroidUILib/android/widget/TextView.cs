@@ -38,13 +38,13 @@ namespace AndroidInteropLib.android.widget
             
         }
 
-        public void setText(int resid)
+        public virtual void setText(int resid)
         {
             //not implemented yet.
             //setText(mContext.getResources().);
         }
 
-        public void setText(string text)
+        public virtual void setText(string text)
         {
             if (text != null)
             {

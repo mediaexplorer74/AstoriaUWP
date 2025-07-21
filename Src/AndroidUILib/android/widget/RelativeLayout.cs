@@ -33,12 +33,14 @@ namespace AndroidInteropLib.android.widget
             addView(view, null);
         }
 
+
+
         public override void addView(View view, LayoutParams param)
         {
             content.Children.Add(view);
         }
 
-        public override void removeView(View view)
+        public override void removeView(AndroidInteropLib.android.view.View view)
         {
             content.Children.Remove(view);
         }
