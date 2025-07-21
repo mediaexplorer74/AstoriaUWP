@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Media;
 
 namespace AndroidInteropLib.android.view
 {
-    public /*abstract*/ class View
+    public abstract class ViewA
     {
         private int id;
         public Context mContext { get; private set; }
@@ -29,13 +29,13 @@ namespace AndroidInteropLib.android.view
         //Used for Microsoft Windows rendering
         public ContentControl WinUI = new ContentControl();
 
-        public View(Context context)
+        public ViewA(Context context)
         {
             this.mContext = context;
             CreateWinUI();
         }
 
-        public View(Context context, AttributeSet attrs)
+        public ViewA(Context context, AttributeSet attrs)
         {
             WinUI.Name = this.GetType().Name;
             WinUI.HorizontalContentAlignment = HorizontalAlignment.Stretch;
@@ -100,14 +100,12 @@ namespace AndroidInteropLib.android.view
                 return null;
         }
 
-        public virtual void CreateWinUI(params object[] obj) 
-        {
-        }
+        public abstract void CreateWinUI(params object[] obj);
 
-        public static implicit operator ContentControl(View v)
-        {
-            return v.WinUI;
-        }
+        //public static implicit operator ContentControl(View v)
+        //{
+        //    return v.WinUI;
+        //}
 
         public int generateViewId()
         {

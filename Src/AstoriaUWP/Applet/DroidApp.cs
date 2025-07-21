@@ -1,16 +1,14 @@
-﻿using AndroidInteropLib.android.content;
+using AndroidInteropLib.android.content;
 using AndroidXml;
 using DalvikUWPCSharp.Classes;
-//using DalvikUWPCSharp.Disassembly.APKParser;
-using DalvikUWPCSharp.Disassembly.APKReader;
-//using DalvikUWPCSharp.Disassembly.AXMLPort;
+using DalvikUWPCSharp.Disassembly.APKReader; 
 using DalvikUWPCSharp.Reassembly;
 using dex.net;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
+using System.IO.Compression; //using ICSharpCode.SharpZipLib.Zip;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -92,6 +90,8 @@ namespace DalvikUWPCSharp.Applet
 
         private DroidApp() { }
 
+
+        // CopyAPKToLocalStorage
         public async Task CopyAPKToLocalStorage(StorageFile sf)
         {
             apkName = sf.Name.Replace(".apk", "");
@@ -132,76 +132,153 @@ namespace DalvikUWPCSharp.Applet
 
             apkFile = copiedFile;
 
+            // Ensure the extraction directory is empty to avoid IOException
             try
             {
-                ZipFile.ExtractToDirectory(copiedFile.Path, localAppRoot.Path);
-
-                try
-                {
-                    StorageFile manifestFile = await localAppRoot.GetFileAsync("AndroidManifest.xml");
-                    StorageFile resFile = await localAppRoot.GetFileAsync("resources.arsc");
-
-                    byte[] manifestBytes = await Disassembly.Util.ReadFile(manifestFile);
-                    byte[] resBytes = await Disassembly.Util.ReadFile(resFile);
-
-                    ApkReader apkReader = new ApkReader();
-                    ApkInfo appinfo = apkReader.extractInfo(manifestBytes, resBytes);
-                    metadata = appinfo;
-
-                    appIcon = GetAppIcon();
-
-                    // ! RnD !
-                    //InvokeLoadEvent();
-                    //DroidApp.InvokeDiagEvent();
-
-                    resFolder = await localAppRoot.GetFolderAsync("res");
-
-                    //manifest = new Manifest(manifestFile);
-                    /*if (localAppRoot.GetFileAsync("apktool.yml") != null)
-                    {
-                        manifest = new Manifest(manifestFile, true);
-                    }
-                    else
-                    {
-                        manifest = new Manifest(manifestFile);
-                    }*/
-                    //manifest = new Manifest(manifestFile);
-
-                    //StorageFile resFile = await localAppRoot.GetFileAsync("resources.arsc");
-                    //resources = new Resources(resFile);
-                    
-
-                }
-                catch(System.IO.FileNotFoundException fnfEx)
-                {
-                    var dialog = new MessageDialog($"Not a valid APK file. Please try a different APK file. \n\n{fnfEx.Message}");
-                    await dialog.ShowAsync();
-
-                    //Provided APK is not valid, purge from app data
-                    await localAppRoot.DeleteAsync();
-                    await copiedFile.DeleteAsync();
-
-                    //Go home
-                    
-
-                    return;
-                }
-                
+                var files = Directory.GetFiles(localAppRoot.Path, "*", SearchOption.AllDirectories);
+                foreach (var file in files) File.Delete(file);
+                var dirs = Directory.GetDirectories(localAppRoot.Path, "*", SearchOption.AllDirectories);
+                foreach (var dir in dirs) Directory.Delete(dir, true);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.InnerException);
+                Debug.WriteLine("[WARN] Could not fully clean extraction directory: " + ex.Message);
             }
 
-            //Debug.WriteLine(localAppRoot.Path);
+            // Old case: extraction APK contents to localAppRoot
+            /*try
+            {
+                //System.IO.Compression.ZipFile.ExtractToDirectory(copiedFile.Path, localAppRoot.Path);
+                ZipFile.ExtractToDirectory(copiedFile.Path, localAppRoot.Path, Encoding.UTF8);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[ERROR] APK extraction failed: " + ex.ToString());
+            }*/
 
-            //StorageFile manifestFile = await localAppRoot.GetFileAsync("AndroidManifest.xml");
+            // Experimental case: Step-by-Step extraction APK contents to localAppRoot
+            try
+            {
+                using (ZipArchive zip = ZipFile.OpenRead(copiedFile.Path))
+                {
+                    foreach (ZipArchiveEntry entry in zip.Entries)
+                    {
+                        if (!entry.FullName.EndsWith("/"))
+                        {
+                            var extractPath = Path.Combine(localAppRoot.Path, entry.FullName);
+                            var directoryPath = Path.GetDirectoryName(extractPath);
+                            if (!Directory.Exists(directoryPath))
+                            {
+                                Directory.CreateDirectory(directoryPath);
+                            }
 
-            //manifest = new Manifest(manifestFile);
+                            try
+                            {
+                                entry.ExtractToFile(extractPath, true);
+                            }
+                            catch (Exception ex1)
+                            {
+                                Debug.WriteLine("[ERROR] APK zip element ("+ extractPath + ") extraction failed: " + ex1.Message);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("[ERROR] APK extraction failed: " + ex.ToString());
+            }
+
+            // Проверка и поиск resources.arsc
+            bool arscExists = false;
+            try { var resFileCheck = await localAppRoot.GetFileAsync("resources.arsc"); arscExists = true; }
+            catch { arscExists = false; }
+
+            if (!arscExists)
+            {
+                Debug.WriteLine("[WARN] resources.arsc not found after extraction, searching subfolders...");
+                StorageFile foundArsc = null;
+                async Task SearchFolders(StorageFolder folder)
+                {
+                    var files = await folder.GetFilesAsync();
+                    foreach (var file in files)
+                    {
+                        if (file.Name == "resources.arsc") { foundArsc = file; return; }
+                    }
+                    var subfolders = await folder.GetFoldersAsync();
+                    foreach (var sub in subfolders)
+                    {
+                        await SearchFolders(sub); if (foundArsc != null) return;
+                    }
+                }
+                await SearchFolders(localAppRoot);
+                if (foundArsc != null)
+                {
+                    Debug.WriteLine($"[INFO] resources.arsc found at {foundArsc.Path}, copying to root...");
+                    await foundArsc.CopyAsync(localAppRoot, "resources.arsc", Windows.Storage.NameCollisionOption.ReplaceExisting);
+                }
+                else
+                {
+                    Debug.WriteLine("[ERROR] resources.arsc not found anywhere in extracted APK.");
+                }
+            }
 
 
-        }
+            try
+            {
+                StorageFile manifestFile = await localAppRoot.GetFileAsync("AndroidManifest.xml");
+                StorageFile resFile = await localAppRoot.GetFileAsync("resources.arsc");
 
+                byte[] manifestBytes = await Disassembly.Util.ReadFile(manifestFile);
+                byte[] resBytes = await Disassembly.Util.ReadFile(resFile);
+
+                ApkReader apkReader = new ApkReader();
+                ApkInfo appinfo = apkReader.extractInfo(manifestBytes, resBytes);
+                metadata = appinfo;
+
+                appIcon = GetAppIcon();
+
+                // ! RnD !
+                //InvokeLoadEvent();
+                //DroidApp.InvokeDiagEvent();
+
+                resFolder = await localAppRoot.GetFolderAsync("res");
+
+                //manifest = new Manifest(manifestFile);
+                /*if (localAppRoot.GetFileAsync("apktool.yml") != null)
+                {
+                    manifest = new Manifest(manifestFile, true);
+                }
+                else
+                {
+                    manifest = new Manifest(manifestFile);
+                }*/
+                //manifest = new Manifest(manifestFile);
+
+                //StorageFile resFile = await localAppRoot.GetFileAsync("resources.arsc");
+                //resources = new Resources(resFile);
+                    
+
+            }
+            catch(System.IO.FileNotFoundException fnfEx)
+            {
+                var dialog = new MessageDialog($"Not a valid APK file. Please try a different APK file. \n\n{fnfEx.Message}");
+                await dialog.ShowAsync();
+
+                //Provided APK is not valid, purge from app data
+                await localAppRoot.DeleteAsync();
+                await copiedFile.DeleteAsync();
+
+                //Go home
+                    
+
+                return;
+            }
+
+        }//CopyAPKToLocalStorage
+
+
+        // GetAPKInfoFromLocalAppFolder
         public async Task GetAPKInfoFromLocalAppFolder()
         {
 
@@ -282,7 +359,7 @@ namespace DalvikUWPCSharp.Applet
             foreach (Class m in methods)
             {
                 //DEBUG
-                Debug.WriteLine("[DroidApp info] " + m.ToString());
+                //Debug.WriteLine("[DroidApp info] " + m.ToString());
 
                 if ( m.Name.Equals("com.example.ticom.myapp.MainActivity") 
                     || m.Name.Equals("com.example.ticom.myapp.MainActivity$1")

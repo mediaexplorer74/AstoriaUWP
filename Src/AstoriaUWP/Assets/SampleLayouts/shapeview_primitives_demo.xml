@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ShapeView
+        android:id="@+id/rect1"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+        android:layout_margin="16dp"
+        primitive="rectangle"
+        color="#FF5722"
+        background="#FFFDE7" />
+    <ShapeView
+        android:id="@+id/ellipse1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="160dp"
+        android:layout_marginTop="16dp"
+        primitive="ellipse"
+        color="#3F51B5"
+        background="#E3F2FD" />
+    <ShapeView
+        android:id="@+id/line1"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="120dp"
+        primitive="line"
+        color="#388E3C"
+        x1="10" y1="10" x2="110" y2="30" />
+    <ShapeView
+        android:id="@+id/point1"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="120dp"
+        primitive="point"
+        color="#D32F2F"
+        x="12" y="12" />
+</RelativeLayout>

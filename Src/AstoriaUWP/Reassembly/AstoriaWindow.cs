@@ -1,4 +1,4 @@
-﻿using AndroidInteropLib.android.content;
+using AndroidInteropLib.android.content;
 using AndroidInteropLib.android.view;
 using System;
 using System.Collections.Generic;
@@ -47,22 +47,26 @@ namespace DalvikUWPCSharp.Reassembly
 
         public override View getDecorView()
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine("[AstoriaWindow] getDecorView not implemented");
+            return null;
         }
 
         public override int getNavigationBarColor()
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine("[AstoriaWindow] getNavigationBarColor not implemented");
+            return -1;
         }
 
         public override int getStatusBarColor()
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine("[AstoriaWindow] getStatusBarColor not implemented");
+            return -1;
         }
 
         public override bool isFloating()
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine("[AstoriaWindow] isFloating not implemented");
+            return false;
         }
 
         public override void setContentView(View view)
@@ -79,7 +83,13 @@ namespace DalvikUWPCSharp.Reassembly
 
         public override void setContentView(View view, ViewGroup.LayoutParams _params)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine("[AstoriaWindow] setContentView(view, params) not implemented");
+            SetContentView(view);
+        }
+
+        private void SetContentView(View view)
+        {
+            emuPage.SetContentView(view);
         }
 
         public override void setNavigationBarColor(int color)

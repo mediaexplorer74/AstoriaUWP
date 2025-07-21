@@ -129,6 +129,8 @@
     <Compile Include="android\text\Spanned.cs" />
     <Compile Include="android\text\SpanWatcher.cs" />
     <Compile Include="android\util\SparseArray.cs" />
+    <Compile Include="android\view\Layout.cs" />
+    <Compile Include="android\view\ViewA.cs" />
     <Compile Include="android\widget\RelativeLayout.cs" />
     <Compile Include="android\support\v4\Pools.cs" />
     <Compile Include="android\util\AttributeSet.cs" />
@@ -168,6 +170,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ticomware\interop\NullView.cs" />
     <Compile Include="ticomware\interop\ResXMLParser.cs" />
+    <Compile Include="ticomware\interop\ShapeView.cs" />
     <Compile Include="ticomware\interop\StringCharSequence.cs" />
     <Compile Include="ticomware\interop\Util.cs" />
     <EmbeddedResource Include="Properties\AndroidInteropLib.rd.xml" />
@@ -177,9 +180,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Square150x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AndroidXml\AndroidXml.csproj">

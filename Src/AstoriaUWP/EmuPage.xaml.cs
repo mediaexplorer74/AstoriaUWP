@@ -1,4 +1,4 @@
-﻿// EmuPage
+// EmuPage
 
 using System;
 using System.Diagnostics;
@@ -135,33 +135,39 @@ namespace DalvikUWPCSharp
         // Render
         private async void Render()
         {
-            var layout = await UIRenderer.CurrentApp.resFolder.GetFolderAsync("layout");
-            
             StorageFile sf = null;
             try
             {
+                var layout = await UIRenderer.CurrentApp.resFolder.GetFolderAsync("layout");
                 sf = await layout.GetFileAsync("activity_main.xml");
             }
             catch(Exception ex)
             {
                 Debug.WriteLine("[EmuPage] [Render] activity_main.xml Layout Exception: " + ex.Message);
-
-                ContentDialog msgDialog = new ContentDialog()
+                
+                // Fallback: try to load from Assets/SampleApps/ShapeViewDemo/activity_main.xml
+                try
                 {
-                    Title = "Activity_main.xml not found! " +
-                      "It must be created manually (in App Storage).",
-                    Content = "Activity_main.xml critical problems: " + ex.Message,
-                    PrimaryButtonText = "OK"
-                };
-
-                ContentDialogResult result = await msgDialog.ShowAsync();
-
-                // return because of sf is null 
-                return;
+                    string fallbackPath = "ms-appx:///Assets/SampleApps/ShapeViewDemo/activity_main.xml";
+                    sf = await StorageFile.GetFileFromApplicationUriAsync(new Uri(fallbackPath));
+                    Debug.WriteLine("[EmuPage] [Render] Loaded fallback activity_main.xml from Assets/SampleApps/ShapeViewDemo.");
+                }
+                catch (Exception fallbackEx)
+                {
+                    Debug.WriteLine("[EmuPage] [Render] Fallback activity_main.xml not found: " + fallbackEx.Message);
+                    ContentDialog msgDialog = new ContentDialog()
+                    {
+                        Title = "Activity_main.xml not found!",
+                        Content = "Neither app resources nor fallback Assets/SampleApps/ShapeViewDemo/activity_main.xml could be loaded.\n" 
+                            + ex.Message + "\n" + fallbackEx.Message,
+                        PrimaryButtonText = "OK"
+                    };
+                    ContentDialogResult result = await msgDialog.ShowAsync();
+                    return;
+                }
             }
 
             UIElement child = null;
-
             try
             {
                 child = await UIRenderer.RenderXmlFile(sf);
@@ -171,9 +177,7 @@ namespace DalvikUWPCSharp
                 Debug.WriteLine("EmuPage - Render - UIRenderer.RenderXmlFile Exception: " + ex2.Message);
             }
 
-            //UserControl uc = (UserControl)child;
             UIElement uc = child;
-
 
             var widthBinding = new Binding();
             widthBinding.Converter = new EPDPConverter();
@@ -184,9 +188,6 @@ namespace DalvikUWPCSharp
             hBinding.Converter = new EPDPConverter();
             hBinding.ElementName = "RenderTargetBox";
             hBinding.ConverterParameter = RenderTargetBox.Height;
-
-            //uc.SetBinding(FrameworkElement.WidthProperty, widthBinding);
-            //uc.SetBinding(FrameworkElement.HeightProperty, hBinding);
 
             try
             {
@@ -206,17 +207,10 @@ namespace DalvikUWPCSharp
                 Debug.WriteLine("EmuPage - Render - RenderTargetGrid.Children.Add Exception: " + ex4.Message);
             }
 
-
             SetTitleBarColor(attr.colorPrimaryDark);
-
             cpu.Start();
-            
-            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();//.
-
-            //RnD
-            //await RenderPage();
-
-        }//Render end
+            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
+        }
 
 
         // SetContentView

@@ -107,7 +107,6 @@ namespace AndroidInteropLib.android.view
             {
                 return inflate(parser, root, attachToRoot);
             }
-
             finally
             {
                 parser.close();
@@ -603,11 +602,14 @@ namespace AndroidInteropLib.android.view
             //PoC
             try
             {
-                string fullname = "AndroidInteropLib." + (prefix != null ? (prefix + name) : name);
-                
+                //string fullname = "AndroidInteropLib." + (prefix != null ? (prefix + name) : name);
+                //DEBUG
+                string fullname = "AndroidInteropLib.android.view.View";
+
                 Type viewType = Type.GetType(fullname);
                 
                 //check if viewType is not null...
+                //DEBUG
                 if (viewType != null)
                 {
                     View view = (View)Activator.CreateInstance(viewType, mContext, attrs);
@@ -625,7 +627,7 @@ namespace AndroidInteropLib.android.view
             {
                 //Maybe in the future return a black box with layout info saying "loading failed?"
                 NullView nv = new NullView(mContext, attrs);
-                nv.setText("[>] View not found: " + name + $"\n\n{ex.Message}");
+                nv.setText("[>] View not found: " + name + $"\n\n{ex.StackTrace}");
                 return nv;
                 //throw ex;
             }

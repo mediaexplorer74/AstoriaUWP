@@ -1,4 +1,4 @@
-﻿using AndroidInteropLib.android.util;
+using AndroidInteropLib.android.util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +20,20 @@ namespace DalvikUWPCSharp.Reassembly
         {
             xe1 = xe;
             attributes = xe.Attributes().ToArray();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] Initialized with {attributes.Length} attributes from element: {xe1.Name}");
         }
 
         public bool getAttributeBooleanValue(string nspace, string attribute, bool defaultValue)
         {
-            try { return bool.Parse(FindAttributeVal(nspace, attribute)); }
-            catch { return defaultValue; }
+            try {
+                var val = FindAttributeVal(nspace, attribute);
+                if (val == null) throw new Exception("Attribute missing");
+                return bool.Parse(val);
+            }
+            catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] getAttributeBooleanValue failed for {attribute}: {ex.Message}");
+                return defaultValue;
+            }
         }
 
         public bool getAttributeBooleanValue(int index, bool defaultValue)
@@ -47,14 +55,28 @@ namespace DalvikUWPCSharp.Reassembly
 
         public float getAttributeFloatValue(string nspace, string attribute, float defaultValue)
         {
-            try { return float.Parse(FindAttributeVal(nspace, attribute)); }
-            catch { return defaultValue; }
+            try {
+                var val = FindAttributeVal(nspace, attribute);
+                if (val == null) throw new Exception("Attribute missing");
+                return float.Parse(val);
+            }
+            catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] getAttributeFloatValue failed for {attribute}: {ex.Message}");
+                return defaultValue;
+            }
         }
 
         public int getAttributeIntValue(string nspace, string attribute, int defaultValue)
         {
-            try { return int.Parse(FindAttributeVal(nspace, attribute)); }
-            catch { return defaultValue; }
+            try {
+                var val = FindAttributeVal(nspace, attribute);
+                if (val == null) throw new Exception("Attribute missing");
+                return int.Parse(val);
+            }
+            catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] getAttributeIntValue failed for {attribute}: {ex.Message}");
+                return defaultValue;
+            }
         }
 
         public int getAttributeIntValue(int index, int defaultValue)
@@ -65,12 +87,14 @@ namespace DalvikUWPCSharp.Reassembly
 
         public int getAttributeListValue(int index, string[] options, int defaultValue)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] getAttributeListValue not implemented: index={index}");
+            return defaultValue;
         }
 
         public int getAttributeListValue(string nspace, string attribute, string[] options, int defaultValue)
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] getAttributeListValue not implemented: {attribute}");
+            return defaultValue;
         }
 
         public string getAttributeName(int index)
@@ -81,26 +105,33 @@ namespace DalvikUWPCSharp.Reassembly
 
         public int getAttributeNameResource(int index)
         {
-            //TODO: Return res ID for attribute
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] getAttributeNameResource not implemented: index={index}");
+            return -1;
         }
 
         public int getAttributeResourceValue(string nspace, string attribute, int defaultValue)
         {
-            //TODO: return res ID for attribute
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] getAttributeResourceValue not implemented: {attribute}");
+            return defaultValue;
         }
 
         public int getAttributeResourceValue(int index, int defaultValue)
         {
-            //TODO: return res ID for attribute
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] getAttributeResourceValue not implemented: index={index}");
+            return defaultValue;
         }
 
         public uint getAttributeUnsignedIntValue(string nspace, string attribute, uint defaultValue)
         {
-            try { return uint.Parse(FindAttributeVal(nspace, attribute)); }
-            catch { return defaultValue; }
+            try {
+                var val = FindAttributeVal(nspace, attribute);
+                if (val == null) throw new Exception("Attribute missing");
+                return uint.Parse(val);
+            }
+            catch (Exception ex) {
+                System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] getAttributeUnsignedIntValue failed for {attribute}: {ex.Message}");
+                return defaultValue;
+            }
         }
 
         public uint getAttributeUnsignedIntValue(int index, uint defaultValue)
@@ -136,33 +167,33 @@ namespace DalvikUWPCSharp.Reassembly
 
         public string getPositionDescription()
         {
-            throw new NotImplementedException();
+            System.Diagnostics.Debug.WriteLine("[AstoriaAttrSet] getPositionDescription not implemented");
+            return string.Empty;
         }
 
         public int getStyleAttribute()
         {
-            throw new NotImplementedException();
-            //return getAttributeResourceValue(null, "style");
+            System.Diagnostics.Debug.WriteLine("[AstoriaAttrSet] getStyleAttribute not implemented");
+            return -1;
         }
 
         private string FindAttributeVal(string nspace, string attribute)
         {
             //Wrap nspace with curly brackets if not already
-            if(!nspace.StartsWith("{") && !nspace.EndsWith("}") && (!nspace.Equals(string.Empty) || nspace == null))
+            if(!string.IsNullOrEmpty(nspace) && !nspace.StartsWith("{") && !nspace.EndsWith("}"))
             {
                 nspace = "{" + nspace + "}";
             }
-
             string expandedName = (nspace ?? "") + attribute;
-
             foreach(XAttribute xa in attributes)
             {
                 if(xa.Name.ToString().Equals(expandedName))
                 {
+                    System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] Found attribute: {expandedName} = {xa.Value}");
                     return xa.Value;
                 }
             }
-
+            System.Diagnostics.Debug.WriteLine($"[AstoriaAttrSet] Attribute not found: {expandedName}");
             return null;
         }
     }

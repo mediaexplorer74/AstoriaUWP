@@ -101,7 +101,15 @@ namespace DalvikUWPCSharp.Classes
             {
                 foreach (OpCode o in m.GetInstructions())
                 {
-                    ExecuteInstruction(o, cl);
+                    //try
+                    //{
+                        ExecuteInstruction(o, cl);
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    Debug.WriteLine("[ex] Dalvik CPU - RunMethod Exception : "
+                    //        + ex.Message);
+                    //}
                 }
             }
 

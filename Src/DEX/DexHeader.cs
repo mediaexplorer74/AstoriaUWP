@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 
 /// <summary>
@@ -100,7 +101,7 @@ namespace dex.net
 			header.ApiVersion = Encoding.UTF8.GetString(reader.ReadBytes(4));
 			
 			// Log the detected DEX version
-			Console.WriteLine("DEX API Version: " + header.ApiVersion);
+			Debug.WriteLine("DEX API Version: " + header.ApiVersion);
 			
 			header.Checksum = reader.ReadUInt32();
 			header.Signature = reader.ReadBytes(20);
