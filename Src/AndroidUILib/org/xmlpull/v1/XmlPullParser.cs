@@ -100,7 +100,7 @@ namespace AndroidInteropLib.org.xmlpull.v1
         public abstract int nextToken();
 
         //-----------------------------------------------------------------------------
-        // utility methods to make XML parsing easier ...
+        // utility methods to mak XML parsing easier ...
 
 
         public abstract void require(int type, string nspace, string name);

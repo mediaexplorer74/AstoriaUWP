@@ -19,7 +19,7 @@ namespace AndroidInteropLib.android.view
         private int id;
         public Context mContext { get; private set; }
         private ViewGroup.LayoutParams layparams;
-
+        
 
         public const int GONE = 8;
         public const int INVISIBLE = 4;
@@ -44,21 +44,13 @@ namespace AndroidInteropLib.android.view
             this.mContext = context;
 
             //Get attributes and set this view's options
-
-            if (attrs != null)
-                setId(Convert.ToInt32(attrs.getIdAttribute()));
+            setId(Convert.ToInt32(attrs.getIdAttribute()));
             //setId((int)attrs.getAttributeUnsignedIntValue(Util.nspace, "id", 0));
 
             //FOR IMPLEMENTING GRAVITY: if((grav | top) == grav) - means it contains top param. replace top with others (bottom, center, etc) to determine gravity
+            LoadViewAttributeSet(attrs);
 
-            // dirty hack
-            if (attrs != null)
-                LoadViewAttributeSet(attrs);
-
-            if (attrs != null)
-                CreateWinUI(context, attrs);
-            else
-                CreateWinUI(context, default);
+            CreateWinUI(context, attrs);
         }
 
         private void LoadViewAttributeSet(AttributeSet a)
@@ -129,7 +121,7 @@ namespace AndroidInteropLib.android.view
         public bool isEnabled()
         {
             //return true;
-
+            
             return WinUI.IsEnabled;
         }
 
@@ -174,7 +166,7 @@ namespace AndroidInteropLib.android.view
         {
             layparams = lparams;
 
-            switch (lparams.width)
+            switch(lparams.width)
             {
                 case ViewGroup.LayoutParams.MATCH_PARENT:
                     WinUI.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Stretch;
@@ -204,7 +196,7 @@ namespace AndroidInteropLib.android.view
                     break;
             }
 
-            if (lparams.GetType().Equals(typeof(ViewGroup.MarginLayoutParams)))
+            if(lparams.GetType().Equals(typeof(ViewGroup.MarginLayoutParams)))
             {
                 ViewGroup.MarginLayoutParams lparams2 = (ViewGroup.MarginLayoutParams)lparams;
                 WinUI.Margin = new Windows.UI.Xaml.Thickness(lparams2.leftMargin, lparams2.topMargin, lparams2.rightMargin, lparams2.bottomMargin);
@@ -223,7 +215,7 @@ namespace AndroidInteropLib.android.view
 
         public void setVisibility(int visibility)
         {
-            switch (visibility)
+            switch(visibility)
             {
                 case VISIBLE:
                     WinUI.Visibility = Windows.UI.Xaml.Visibility.Visible;

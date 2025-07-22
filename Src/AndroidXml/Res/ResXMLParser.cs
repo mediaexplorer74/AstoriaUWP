@@ -210,7 +210,7 @@ namespace AndroidXml.Res
 
         public void Restart()
         {
-            //throw new NotSupportedException();
+            throw new NotSupportedException();
         }
 
         public XmlParserEventCode Next()
@@ -226,10 +226,7 @@ namespace AndroidXml.Res
 
         internal string GetString(uint? index)
         {
-            if ((index == null) || (this.ResourceMap == null))
-            { 
-                return "";
-            }
+            if (index == null) return "";
             if (index < this.ResourceMap.ResouceIds.Count)
             {
                 uint identifier = this.ResourceMap.ResouceIds[(int)index];

@@ -1,6 +1,4 @@
-﻿// Resources
-
-using AndroidInteropLib.android.util;
+﻿using AndroidInteropLib.android.util;
 using AndroidInteropLib.org.xmlpull.v1;
 using System;
 using System.Collections.Concurrent;
@@ -35,74 +33,53 @@ namespace AndroidInteropLib.android.content.res
 
         public virtual int getColor(int id)
         {
-            throw new Exception("Must be overriden.");
+            //TEMP
+            //throw new Exception("Must be overriden.");
+            return 5;
         }
 
         public virtual string getString(int id)
         {
-            throw new Exception("Must be overriden.");
+            //TEMP
+            //throw new Exception("Must be overriden.");
+            return "TESTSTRING";
         }
 
         public virtual string[] getStringArray(int id)
         {
-            throw new Exception("Must be overriden.");
+            //TEMP
+            //throw new Exception("Must be overriden.");
+            var test_array =  new string[] { "TESTSTRING1", "TESTSTRING2", "TESTSTRING3" };
+            return test_array;
         }
 
         public virtual XmlResourceParser loadXmlResourceParser(int id, string type)
         {
-            throw new Exception("Must be overriden.");
+            //TEMP
+            //throw new Exception("Must be overriden.");
+            return default;
         }
 
         public virtual XmlResourceParser loadXmlResourceParser(string file, string type)
         {
-            throw new Exception("Must be overriden.");
+            //TEMP
+            //throw new Exception("Must be overriden.");
+            return default;
         }
 
         public virtual ColorStateList loadColorStateList(TypedValue tv, int id)
         {
-            throw new Exception("Must be overriden.");
+            //TEMP
+            //throw new Exception("Must be overriden.");
+            return default;
         }
 
         public virtual string[] getTextArray(int id)
         {
-            throw new Exception("Must be overriden.");
-        }
-
-        /*internal string getResourceName(int resource)
-        {
+            //TEMP
             //throw new Exception("Must be overriden.");
-
-            string result = "";
-            //try
-            //{
-            //    result = int.Parse(resource.ToString(), System.Globalization.NumberStyles.HexNumber).ToString("X");
-            //        //getResourceName(int.Parse(resource.ToString(), System.Globalization.NumberStyles.HexNumber));
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.WriteLine("[ex] Resources - getResourceName ex.: " + ex.Message);
-            //}            
-            
-            int r = int.Parse(/ * hexString * /   resource.ToString(), System.Globalization.NumberStyles.HexNumber);
-            result = r.ToString();
-            return result;
-        }*/
-
-        internal string getResourceName(int resource)
-        {
-            string value = resource.ToString();
-            try
-            {
-                if (value == null || value.Length == 0)
-                    return "defaultvalue";
-                Int32 r = Int32.Parse(value, System.Globalization.NumberStyles.HexNumber);
-                return r.ToString();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("[ex] Resources - getResourceName ( " + resource + ") error: " + ex.Message);
-                return "defaultvalue";
-            }
+            var test_array = new string[] { "TEST01", "TEST02", "TEST03" };
+            return test_array;
         }
 
         /*public class Theme
