@@ -1,0 +1,5 @@
+MainPackage=C:\Users\Admin\source\repos\!Astoria\AstoriaUWP-0.0.11\Src\AstoriaUWP\bin\ARM\Debug\AstoriaUWP_0.0.11.0_ARM_Debug.appx
+ResourcePack=C:\Users\Admin\source\repos\!Astoria\AstoriaUWP-0.0.11\Src\AstoriaUWP\bin\ARM\Debug\AstoriaUWP_0.0.11.0_scale-100.appx
+ResourcePack=C:\Users\Admin\source\repos\!Astoria\AstoriaUWP-0.0.11\Src\AstoriaUWP\bin\ARM\Debug\AstoriaUWP_0.0.11.0_scale-125.appx
+ResourcePack=C:\Users\Admin\source\repos\!Astoria\AstoriaUWP-0.0.11\Src\AstoriaUWP\bin\ARM\Debug\AstoriaUWP_0.0.11.0_scale-150.appx
+ResourcePack=C:\Users\Admin\source\repos\!Astoria\AstoriaUWP-0.0.11\Src\AstoriaUWP\bin\ARM\Debug\AstoriaUWP_0.0.11.0_scale-400.appx

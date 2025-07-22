@@ -1,0 +1,1 @@
+MainPackage=C:\Users\Admin\source\repos\!Astoria\AstoriaUWP-0.0.11\Src\AstoriaUWP\bin\x64\Debug\AstoriaUWP_0.0.11.0_x64_Debug.appx
